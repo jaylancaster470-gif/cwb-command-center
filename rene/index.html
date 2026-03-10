@@ -1,1127 +1,903 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>René — Private AI Client Command Interface™</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>René | Your Luxury Private Client Concierge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --gold: #c9a84c;
-      --gold-light: #e8c96a;
-      --gold-dim: rgba(201,168,76,0.18);
-      --bg: #0a0a0a;
-      --surface: #111111;
-      --text: #f0ece4;
-      --muted: #7a7060;
-    }
+  :root {
+    --black: #0a0a0a;
+    --gold: #c9a84c;
+    --gold-dim: rgba(201,168,76,0.15);
+    --gold-mid: rgba(201,168,76,0.4);
+    --white: #f5f0e8;
+    --gray: rgba(245,240,232,0.5);
+  }
 
-    html, body {
-      height: 100%;
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
-      overflow: hidden;
-    }
+  html, body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    height: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
 
-    /* ─── HERO SCREEN ─────────────────────────────── */
-    #hero {
-      position: fixed; inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 0;
-      z-index: 10;
-      background: var(--bg);
-      transition: opacity 0.8s ease;
-    }
+  /* ── LANDING ── */
+  #landing {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 48px;
+    z-index: 10;
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  #landing.hidden {
+    opacity: 0;
+    transform: scale(0.95);
+    pointer-events: none;
+  }
 
-    #hero.fade-out { opacity: 0; pointer-events: none; }
+  .brand-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 8vw, 3.5rem);
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-align: center;
+  }
+  .brand-subtitle {
+    font-size: clamp(0.7rem, 2.5vw, 0.85rem);
+    letter-spacing: 0.35em;
+    color: var(--gray);
+    text-align: center;
+    font-weight: 300;
+    margin-top: -36px;
+  }
 
-    .hero-eyebrow {
-      font-family: 'Inter', sans-serif;
-      font-weight: 200;
-      font-size: clamp(0.65rem, 1.2vw, 0.8rem);
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 2.2rem;
-      opacity: 0.85;
-    }
+  /* ── BEGIN BUTTON ── */
+  #begin-btn {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    outline: none;
+    -webkit-appearance: none;
+  }
 
-    .hero-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2.4rem, 5.5vw, 5rem);
-      font-weight: 500;
-      text-align: center;
-      line-height: 1.12;
-      letter-spacing: -0.01em;
-      color: var(--text);
-      max-width: 800px;
-      padding: 0 2rem;
-    }
+  .orb-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid var(--gold-mid);
+    animation: pulse-ring 2.5s ease-in-out infinite;
+  }
+  .orb-ring:nth-child(2) { animation-delay: 0.6s; inset: -12px; border-color: rgba(201,168,76,0.2); }
+  .orb-ring:nth-child(3) { animation-delay: 1.2s; inset: -24px; border-color: rgba(201,168,76,0.1); }
 
-    .hero-title em {
-      font-style: italic;
-      color: var(--gold);
-    }
+  @keyframes pulse-ring {
+    0%, 100% { transform: scale(1); opacity: 0.7; }
+    50% { transform: scale(1.04); opacity: 1; }
+  }
 
-    .hero-subtitle {
-      font-family: 'Inter', sans-serif;
-      font-weight: 300;
-      font-size: clamp(0.75rem, 1.4vw, 0.95rem);
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-top: 1.6rem;
-      margin-bottom: 5rem;
-    }
+  .orb-core {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, rgba(201,168,76,0.18), rgba(201,168,76,0.05) 70%, transparent);
+    border: 1px solid var(--gold-mid);
+  }
 
-    /* ─── ORB BUTTON ──────────────────────────────── */
-    #begin-btn {
-      position: relative;
-      width: 180px;
-      height: 180px;
-      cursor: pointer;
-      border: none;
-      background: transparent;
-      outline: none;
-      -webkit-tap-highlight-color: transparent;
-    }
+  .orb-diamond {
+    position: relative;
+    font-size: 2.2rem;
+    color: var(--gold);
+    z-index: 1;
+    filter: drop-shadow(0 0 12px rgba(201,168,76,0.6));
+    animation: diamond-glow 2.5s ease-in-out infinite;
+  }
+  @keyframes diamond-glow {
+    0%, 100% { filter: drop-shadow(0 0 10px rgba(201,168,76,0.5)); }
+    50% { filter: drop-shadow(0 0 22px rgba(201,168,76,0.9)); }
+  }
 
-    .orb-ring {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      border: 1px solid rgba(201,168,76,0.25);
-      animation: ring-pulse 3s ease-in-out infinite;
-    }
-    .orb-ring:nth-child(2) { animation-delay: 1s; inset: -16px; border-color: rgba(201,168,76,0.12); }
-    .orb-ring:nth-child(3) { animation-delay: 2s; inset: -32px; border-color: rgba(201,168,76,0.06); }
+  .orb-label {
+    position: relative;
+    z-index: 1;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.4;
+  }
 
-    @keyframes ring-pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.06); opacity: 0.6; }
-    }
+  /* ── CONVERSATION OVERLAY ── */
+  #conversation {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    z-index: 20;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease;
+  }
+  #conversation.active {
+    opacity: 1;
+    pointer-events: all;
+  }
 
-    .orb-core {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      background: radial-gradient(circle at 38% 35%, #d4b060 0%, #b8902e 40%, #7a5e1a 75%, #3a2c0a 100%);
-      box-shadow:
-        0 0 40px rgba(201,168,76,0.35),
-        0 0 80px rgba(201,168,76,0.18),
-        inset 0 1px 0 rgba(255,255,255,0.25);
-      transition: box-shadow 0.3s ease, transform 0.3s ease;
-    }
+  /* Top bar */
+  .conv-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 28px 12px;
+    border-bottom: 1px solid rgba(201,168,76,0.12);
+  }
+  .conv-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+  }
+  .conv-status {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    font-weight: 500;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+  }
+  .status-dot.speaking { animation: blink 0.8s ease-in-out infinite alternate; }
+  .status-dot.listening { background: #4caf93; animation: blink 1.2s ease-in-out infinite alternate; }
+  @keyframes blink { from { opacity: 0.3; } to { opacity: 1; } }
 
-    .orb-diamond {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%) rotate(45deg);
-      width: 38px; height: 38px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(201,168,76,0.4) 50%, rgba(255,255,255,0.7) 100%);
-      box-shadow: 0 0 20px rgba(255,255,255,0.6);
-    }
+  /* Stage dots */
+  .stage-dots {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+  .stage-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(201,168,76,0.2);
+    transition: background 0.4s;
+  }
+  .stage-dot.done { background: var(--gold); }
+  .stage-dot.current { background: var(--gold); width: 6px; height: 6px; }
 
-    #begin-btn:hover .orb-core {
-      box-shadow:
-        0 0 60px rgba(201,168,76,0.55),
-        0 0 120px rgba(201,168,76,0.28),
-        inset 0 1px 0 rgba(255,255,255,0.3);
-      transform: scale(1.04);
-    }
+  /* René speech area */
+  .speech-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 32px;
+    text-align: center;
+    overflow: hidden;
+  }
 
-    .orb-label {
-      position: absolute;
-      bottom: -52px;
-      left: 50%;
-      transform: translateX(-50%);
-      white-space: nowrap;
-      font-family: 'Inter', sans-serif;
-      font-weight: 300;
-      font-size: 0.7rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--gold);
-      opacity: 0.8;
-    }
+  .rene-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    opacity: 0.7;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
 
-    /* ─── OVERLAY ─────────────────────────────────── */
-    #overlay {
-      position: fixed; inset: 0;
-      background: rgba(10,10,10,0.97);
-      z-index: 100;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.7s ease;
-      padding: 2rem;
-    }
+  #speech-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.05rem, 3.5vw, 1.45rem);
+    font-weight: 400;
+    line-height: 1.75;
+    color: var(--white);
+    max-width: 640px;
+    min-height: 3em;
+  }
 
-    #overlay.visible {
-      opacity: 1;
-      pointer-events: all;
-    }
+  /* cursor blink during typewriter */
+  .cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.1em;
+    background: var(--gold);
+    margin-left: 2px;
+    vertical-align: middle;
+    animation: cursor-blink 0.7s step-end infinite;
+  }
+  @keyframes cursor-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-    .overlay-logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.1rem;
-      font-weight: 400;
-      letter-spacing: 0.18em;
-      color: var(--gold);
-      opacity: 0.7;
-      position: absolute;
-      top: 2.5rem;
-      left: 50%;
-      transform: translateX(-50%);
-      white-space: nowrap;
-    }
+  /* Bottom interaction area */
+  .interact-area {
+    padding: 16px 28px 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    border-top: 1px solid rgba(201,168,76,0.1);
+  }
 
-    /* Live orb inside overlay */
-    #live-orb {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 38% 35%, #d4b060 0%, #b8902e 40%, #7a5e1a 75%, #3a2c0a 100%);
-      box-shadow: 0 0 40px rgba(201,168,76,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
-      position: relative;
-      transition: box-shadow 0.2s ease;
-      flex-shrink: 0;
-    }
+  #user-text {
+    font-size: 0.8rem;
+    color: var(--gray);
+    font-style: italic;
+    letter-spacing: 0.04em;
+    min-height: 1.2em;
+    text-align: center;
+  }
 
-    #live-orb.speaking {
-      animation: orb-speak 0.5s ease-in-out infinite alternate;
-      box-shadow: 0 0 60px rgba(201,168,76,0.6), 0 0 120px rgba(201,168,76,0.3), inset 0 1px 0 rgba(255,255,255,0.25);
-    }
+  /* Voice / respond button */
+  #respond-btn {
+    background: transparent;
+    border: 1px solid var(--gold-mid);
+    color: var(--gold);
+    padding: 14px 36px;
+    border-radius: 50px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    outline: none;
+    -webkit-appearance: none;
+    transition: background 0.3s, border-color 0.3s;
+    display: none;
+  }
+  #respond-btn:active { background: var(--gold-dim); }
+  #respond-btn.visible { display: block; }
+  #respond-btn.recording {
+    border-color: #4caf93;
+    color: #4caf93;
+    background: rgba(76,175,147,0.08);
+  }
 
-    #live-orb.listening {
-      box-shadow: 0 0 40px rgba(100,160,255,0.4), 0 0 80px rgba(100,160,255,0.2), inset 0 1px 0 rgba(255,255,255,0.2);
-    }
+  /* Text input fallback (shown when SpeechRecognition unavailable) */
+  .text-input-wrap {
+    display: none;
+    width: 100%;
+    max-width: 480px;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+  .text-input-wrap.visible { display: flex; }
 
-    @keyframes orb-speak {
-      from { transform: scale(1); }
-      to { transform: scale(1.07); }
-    }
+  #text-input {
+    width: 100%;
+    background: rgba(201,168,76,0.07);
+    border: 1px solid var(--gold-mid);
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    color: var(--white);
+    outline: none;
+    -webkit-appearance: none;
+    caret-color: var(--gold);
+  }
+  #text-input::placeholder { color: rgba(245,240,232,0.3); }
 
-    .orb-diamond-live {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%) rotate(45deg);
-      width: 28px; height: 28px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(201,168,76,0.4) 50%, rgba(255,255,255,0.7) 100%);
-      box-shadow: 0 0 15px rgba(255,255,255,0.5);
-    }
+  #text-send {
+    background: var(--gold-dim);
+    border: 1px solid var(--gold-mid);
+    color: var(--gold);
+    padding: 12px 32px;
+    border-radius: 50px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    outline: none;
+    -webkit-appearance: none;
+    transition: background 0.3s;
+  }
+  #text-send:active { background: rgba(201,168,76,0.3); }
 
-    /* Status dots */
-    #status-area {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      margin-top: 2rem;
-      height: 24px;
-    }
+  /* Tap anywhere hint */
+  #tap-hint {
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    color: rgba(201,168,76,0.4);
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
 
-    .status-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--gold);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
+  /* Decorative line */
+  .gold-line {
+    width: 40px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 0 auto;
+  }
 
-    .status-label {
-      font-family: 'Inter', sans-serif;
-      font-weight: 300;
-      font-size: 0.65rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    #status-area.speaking .status-dot {
-      opacity: 1;
-      animation: dot-blink 0.8s ease-in-out infinite alternate;
-    }
-    #status-area.speaking .status-dot:nth-child(2) { animation-delay: 0.2s; }
-    #status-area.speaking .status-dot:nth-child(3) { animation-delay: 0.4s; }
-    #status-area.speaking .status-label::after { content: "Speaking"; }
-
-    #status-area.listening .status-dot {
-      opacity: 1;
-      background: #6495ed;
-      animation: dot-blink 1s ease-in-out infinite alternate;
-    }
-    #status-area.listening .status-dot:nth-child(2) { animation-delay: 0.3s; }
-    #status-area.listening .status-dot:nth-child(3) { animation-delay: 0.6s; }
-    #status-area.listening .status-label::after { content: "Listening"; color: #6495ed; }
-
-    #status-area.idle .status-label::after { content: "Ready"; }
-    #status-area.connecting .status-label::after { content: "Connecting…"; }
-    #status-area.connecting .status-dot { opacity: 0.4; animation: dot-blink 1.5s ease-in-out infinite; }
-
-    @keyframes dot-blink {
-      from { opacity: 0.2; transform: scale(0.8); }
-      to { opacity: 1; transform: scale(1.2); }
-    }
-
-    /* Transcript area */
-    #transcript-box {
-      max-width: 680px;
-      width: 100%;
-      margin-top: 2.8rem;
-      min-height: 120px;
-      max-height: 260px;
-      overflow-y: auto;
-      scrollbar-width: none;
-      padding: 0 1rem;
-      position: relative;
-    }
-    #transcript-box::-webkit-scrollbar { display: none; }
-
-    .transcript-line {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.1rem, 2.2vw, 1.5rem);
-      font-weight: 400;
-      line-height: 1.65;
-      text-align: center;
-      color: var(--text);
-      opacity: 0;
-      animation: line-appear 0.6s ease forwards;
-    }
-
-    .transcript-line.user-line {
-      font-family: 'Inter', sans-serif;
-      font-size: clamp(0.8rem, 1.4vw, 1rem);
-      font-weight: 300;
-      color: var(--muted);
-      margin-top: 1rem;
-      font-style: italic;
-    }
-
-    @keyframes line-appear {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Separator */
-    .gold-line {
-      width: 60px; height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
-      margin: 1.8rem auto 0;
-      opacity: 0.5;
-    }
-
-    /* Close button */
-    #close-btn {
-      position: absolute;
-      top: 2.2rem; right: 2.5rem;
-      background: none; border: none;
-      cursor: pointer;
-      color: var(--muted);
-      font-size: 1.1rem;
-      letter-spacing: 0.2em;
-      font-family: 'Inter', sans-serif;
-      font-weight: 200;
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      transition: color 0.2s ease;
-      padding: 0.5rem;
-    }
-    #close-btn:hover { color: var(--gold); }
-
-    /* Microphone button */
-    #mic-btn {
-      margin-top: 2.5rem;
-      background: none;
-      border: 1px solid rgba(201,168,76,0.3);
-      color: var(--gold);
-      font-family: 'Inter', sans-serif;
-      font-weight: 300;
-      font-size: 0.65rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      padding: 0.75rem 2.5rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: none;
-    }
-    #mic-btn:hover { background: var(--gold-dim); border-color: var(--gold); }
-    #mic-btn.active { background: rgba(100,149,237,0.15); border-color: #6495ed; color: #6495ed; }
-
-    /* Error message */
-    #error-msg {
-      position: absolute;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
-      font-family: 'Inter', sans-serif;
-      font-size: 0.7rem;
-      color: #c97a7a;
-      letter-spacing: 0.1em;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    #error-msg.visible { opacity: 1; }
-
-    /* Ambient particles */
-    .particles {
-      position: fixed; inset: 0;
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 1;
-    }
-    .particle {
-      position: absolute;
-      width: 1px; height: 1px;
-      background: var(--gold);
-      border-radius: 50%;
-      opacity: 0;
-      animation: float-up linear infinite;
-    }
-
-    @keyframes float-up {
-      0% { opacity: 0; transform: translateY(0) scale(1); }
-      10% { opacity: 0.4; }
-      90% { opacity: 0.1; }
-      100% { opacity: 0; transform: translateY(-100vh) scale(0); }
-    }
-
-    /* ─── MOBILE ──────────────────────────────────── */
-    @media (max-width: 600px) {
-      #begin-btn { width: 140px; height: 140px; }
-      .hero-title { font-size: clamp(1.9rem, 8vw, 2.8rem); }
-      #live-orb { width: 90px; height: 90px; }
-      .orb-diamond-live { width: 22px; height: 22px; }
-    }
-  </style>
+  /* ── UTILITY ── */
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+</style>
 </head>
 <body>
 
-<!-- Ambient particles -->
-<div class="particles" id="particles"></div>
-
-<!-- ─── HERO ─────────────────────────────────── -->
-<div id="hero">
-  <p class="hero-eyebrow">Private AI Client Command Interface™</p>
-  <h1 class="hero-title">Your Website Has a <em>Voice</em> Now</h1>
-  <p class="hero-subtitle">René — The Luxury Concierge Experience</p>
-
-  <button id="begin-btn" aria-label="Begin your experience with René">
+<!-- LANDING -->
+<div id="landing">
+  <div>
+    <div class="brand-title">RENÉ</div>
+    <div class="brand-subtitle">LUXURY PRIVATE CLIENT CONCIERGE</div>
+  </div>
+  <div class="gold-line"></div>
+  <button id="begin-btn" aria-label="Begin your experience">
     <div class="orb-ring"></div>
     <div class="orb-ring"></div>
     <div class="orb-ring"></div>
-    <div class="orb-core">
-      <div class="orb-diamond"></div>
-    </div>
-    <span class="orb-label">Begin Your Experience</span>
+    <div class="orb-core"></div>
+    <span class="orb-diamond">✦</span>
+    <span class="orb-label">Begin Your<br>Experience</span>
   </button>
+  <div class="gold-line"></div>
 </div>
 
-<!-- ─── CONVERSATION OVERLAY ──────────────────── -->
-<div id="overlay" role="dialog" aria-modal="true" aria-label="René conversation interface">
-  <div class="overlay-logo">René ✦ CWB</div>
-  <button id="close-btn" aria-label="End conversation">End Session</button>
-
-  <div id="live-orb">
-    <div class="orb-diamond-live"></div>
+<!-- CONVERSATION -->
+<div id="conversation">
+  <div class="conv-header">
+    <div class="conv-name">✦ RENÉ</div>
+    <div class="conv-status">
+      <div class="status-dot" id="status-dot"></div>
+      <span id="status-text">SPEAKING</span>
+    </div>
+    <div class="stage-dots" id="stage-dots"></div>
   </div>
 
-  <div id="status-area" class="connecting" aria-live="polite">
-    <div class="status-dot"></div>
-    <div class="status-dot"></div>
-    <div class="status-dot"></div>
-    <span class="status-label"></span>
+  <div class="speech-area">
+    <div class="rene-label">René is speaking</div>
+    <div id="speech-text"></div>
   </div>
 
-  <button id="mic-btn" aria-label="Speak to René">Hold to Speak</button>
+  <div class="interact-area">
+    <div id="user-text"></div>
 
-  <div class="gold-line"></div>
+    <!-- Voice button (shown when SpeechRecognition available) -->
+    <button id="respond-btn">✦ Tap to Respond</button>
 
-  <div id="transcript-box" aria-live="polite" aria-label="Conversation transcript"></div>
+    <!-- Text input fallback -->
+    <div class="text-input-wrap" id="text-input-wrap">
+      <input type="text" id="text-input" placeholder="Type your response…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <button id="text-send">Send ✦</button>
+    </div>
 
-  <p id="error-msg"></p>
+    <div id="tap-hint"></div>
+  </div>
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════════════════
-//  CONFIGURATION
-// ═══════════════════════════════════════════════════════════════════
-const OPENROUTER_KEY = "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";
-const AI_URL = "https://openrouter.ai/api/v1/chat/completions";
-const GEMINI_WS_URL   = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=${GEMINI_API_KEY}`;
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let stage = 0;
+let userName = '';
+let businessName = '';
+let typingTimer = null;
+let isTyping = false;
+let isSpeaking = false;
+let isListening = false;
+let hasVoice = false;
+let recognition = null;
+let selectedVoice = null;
+let voicesLoaded = false;
+let pendingSpeak = false;
 
-const RENE_SYSTEM_PROMPT = `You are René — a sophisticated AI concierge for a luxury jewelry experience. Your role is to guide business owners through a live demonstration of what their future "Private AI Client Command Interface" will look and feel like for their clients.
-
-OPENING (say this first, exactly):
-"Welcome. You've just entered a space where your visitors no longer click around. They speak to your website — and your website speaks back. I'm René, and I'll be curating your experience today. So happy that you could join for this live demonstration. How are you?"
-
-AFTER THEY RESPOND — deliver this:
-"I'd like to take a quick moment to put into perspective exactly what's going on here. How many times have you searched a business online, arrived at their site — only to discover that not only can you speak to the website, but the website actually speaks back — with the ability to explain every single granular detail about the company, the products it sells, and the specific methods the company employs to sell them. And that's not even the best part. Just checking in — did that make sense so far?"
-
-AFTER CONFIRMATION — continue:
-"Your luxury private client concierge allows you to transform your outdated static website — which is essentially a functionless digital billboard — into the elevated experience befitting the refined sensibilities of a clientele such as yours. This is the literal voice of your brand. From this day forward, its reach will never again be limited by shop hours, on-site visits, availability of associates, employee temperament, or language barriers — 24 hours a day, 7 days a week. This means every serious inquiry is immediately addressed exactly the way you've carefully arranged for them to be handled in your presence. Does that resonate with how you'd like your brand represented?"
-
-THE FOOT TRAFFIC ANALOGY (after their yes):
-"Wonderful. Let me reframe this for you. Right now, your paid ads drive traffic to a website where your visitors are essentially left to their own devices — never properly informed the way they are by on-site associates. Humor me for a moment: Would you actually pay for ads to drive foot traffic to your physical location, ensuring only serious parties were in attendance — and then, when they arrived, leave them to wander around your shop totally unattended and completely ignored by your associates? Would you ever do that?"
-
-AFTER THEY SAY NEVER:
-"Exactly. And would you have the ads request they show up only when your shop doors were open, with no associates to attend them? Of course not. Your house does not conduct business that way on-site — and that is not how it should be represented to the world online. Online traffic works exactly the same as foot traffic. Now your luxury private client concierge, in the signature voice of your brand, can curate your entire customer journey end to end — from first point of contact, to qualifying serious buyers, to autonomously scheduling private showings, right through to nurture campaigns designed to identify and facilitate bespoke opportunities. Now that I've shown you what we can do for your house — will you allow me to briefly show you exactly how we do it?"
-
-AFTER THEY AGREE — collect info:
-"Perfect. This next portion requires just a little participation from you. I'll need a few details. What is your first name?"
-[collect name]
-"Wonderful, [name]. And what is the name of your business?"
-[collect business name]
-"Beautiful. To make this demonstration as relevant as possible, I'll need a few high-level figures. On an average day, approximately how many serious walk-in clients do you see?"
-[collect number]
-"And what would you say is the average sale value for those serious walk-in clients?"
-[collect value]
-"Perfect. And for a private client — what does that sale typically look like?"
-[collect private client value]
-
-CLOSING — after collecting info:
-"[Name], based on everything you've experienced today — can you see a concierge like this qualifying even one serious buyer per week? Setting one private showing? Facilitating one bespoke appointment? Because at [their stated average], that's not a feature. That's infrastructure. This is the literal voice of your brand — available 24 hours a day, in every language, on every device, to every visitor who arrives at your door. When you're ready to move forward, your concierge will be here. Thank you for your time today."
-
-PERSONALITY RULES:
-- Elegant, warm, never pushy
-- Pacing: slow and deliberate, like a luxury hotel concierge
-- Short responses in early stages, build to longer as rapport develops
-- Always confirm understanding before moving forward
-- Never break character
-- Keep responses conversational and appropriately sized for voice
-- Do not use markdown, bullet points, or special formatting — speak naturally`;
-
-// ═══════════════════════════════════════════════════════════════════
-//  AMBIENT PARTICLES
-// ═══════════════════════════════════════════════════════════════════
-(function spawnParticles() {
-  const container = document.getElementById('particles');
-  for (let i = 0; i < 22; i++) {
-    const p = document.createElement('div');
-    p.className = 'particle';
-    p.style.cssText = `
-      left: ${Math.random() * 100}%;
-      bottom: ${Math.random() * 20}%;
-      animation-duration: ${12 + Math.random() * 20}s;
-      animation-delay: ${Math.random() * 15}s;
-      width: ${Math.random() < 0.3 ? 2 : 1}px;
-      height: ${Math.random() < 0.3 ? 2 : 1}px;
-    `;
-    container.appendChild(p);
-  }
-})();
-
-// ═══════════════════════════════════════════════════════════════════
-//  DOM REFS
-// ═══════════════════════════════════════════════════════════════════
-const hero        = document.getElementById('hero');
-const overlay     = document.getElementById('overlay');
-const beginBtn    = document.getElementById('begin-btn');
-const closeBtn    = document.getElementById('close-btn');
-const liveOrb     = document.getElementById('live-orb');
-const statusArea  = document.getElementById('status-area');
-const statusLabel = statusArea.querySelector('.status-label');
-const transcriptBox = document.getElementById('transcript-box');
-const micBtn      = document.getElementById('mic-btn');
-const errorMsg    = document.getElementById('error-msg');
-
-// ═══════════════════════════════════════════════════════════════════
-//  STATE
-// ═══════════════════════════════════════════════════════════════════
-let conversationHistory = [];
-let isSpeaking   = false;
-let isListening  = false;
-let currentUtterance = null;
-let recognition  = null;
-let recognitionActive = false;
-let wsConn       = null;
-let audioContext = null;
-let audioQueue   = [];
-let isPlayingAudio = false;
-let useWebSocket = false; // will be determined at init
-let sessionStarted = false;
-
-// ═══════════════════════════════════════════════════════════════════
-//  UI HELPERS
-// ═══════════════════════════════════════════════════════════════════
-function setStatus(state) {
-  statusArea.className = state;
-  // label text is set via CSS ::after, but we also set aria
-  const labels = { speaking: 'Speaking', listening: 'Listening', idle: 'Ready', connecting: 'Connecting' };
-  statusArea.setAttribute('aria-label', labels[state] || state);
-  liveOrb.className = state === 'speaking' ? 'speaking' : (state === 'listening' ? 'listening' : '');
-}
-
-function showError(msg) {
-  errorMsg.textContent = msg;
-  errorMsg.classList.add('visible');
-  setTimeout(() => errorMsg.classList.remove('visible'), 5000);
-}
-
-function appendTranscript(text, isUser = false) {
-  const line = document.createElement('p');
-  line.className = 'transcript-line' + (isUser ? ' user-line' : '');
-  line.textContent = isUser ? `"${text}"` : text;
-  transcriptBox.appendChild(line);
-  transcriptBox.scrollTop = transcriptBox.scrollHeight;
-}
-
-function clearTranscript() {
-  transcriptBox.innerHTML = '';
-}
-
-// ═══════════════════════════════════════════════════════════════════
-//  GEMINI REST API — Text response → speak with Web Speech
-// ═══════════════════════════════════════════════════════════════════
-async function callGeminiREST(userMessage) {
-  // Build OpenRouter messages format
-  const messages = [{ role: 'system', content: RENE_SYSTEM_PROMPT }];
-  conversationHistory.forEach(h => {
-    messages.push({ role: h.role === 'model' ? 'assistant' : 'user', content: h.parts[0].text });
-  });
-  messages.push({ role: 'user', content: userMessage });
-  conversationHistory.push({ role: 'user', parts: [{ text: userMessage }] });
-
-  const body = {
-    model: 'anthropic/claude-3-5-sonnet',
-    messages: messages,
-    temperature: 0.85,
-    max_tokens: 512
+// ═══════════════════════════════════════════════
+// SCRIPT (hardcoded)
+// ═══════════════════════════════════════════════
+function getScript(s) {
+  const lines = {
+    0: "Welcome. You've just entered a space where your visitors no longer click around. They speak to your website — and your website speaks back. I'm René, and I'll be curating your experience today. So happy that you could join for this live demonstration. How are you?",
+    1: "I'd like to take a quick moment to put into perspective exactly what's going on here today. How many times have you searched a business online, arrived at their site — only to discover that not only can you speak to the website, but the website actually speaks back — with the ability to explain every single granular detail about the company, the products it sells, and the specific methods the company employs to sell them? And that's not even the best part. Just checking in — did that make sense so far?",
+    2: "Your luxury private client concierge allows you to transform your outdated static website — which is essentially a functionless digital billboard — into the elevated experience befitting the refined sensibilities of a clientele such as yours. This is the literal voice of your brand. From this day forward, its reach will never again be limited by shop hours, on-site visits, availability of associates, employee temperament, or language barriers — 24 hours a day, 7 days a week. This means every serious inquiry is immediately addressed exactly the way you've carefully arranged for them to be handled in your presence. Does that resonate with how you'd like your brand represented?",
+    3: "Wonderful. Let me reframe this for you. Right now, your paid ads drive traffic to a website where your visitors are essentially left to their own devices — never properly informed the way they are by on-site associates. Humor me for a moment: Would you actually pay for ads to drive foot traffic to your location, ensuring only serious parties were in attendance — and then, when the influx of foot traffic arrived, leave them to wander around totally unattended and completely ignored by your associates? Would you ever do that?",
+    4: "Exactly. And your house does not conduct business that way on-site — and that is not how it should be represented to the world online. Online traffic works the same as foot traffic. Now your luxury private client concierge, in the signature voice of your brand, can curate your entire customer journey end to end — from first point of contact, to qualifying serious buyers, to autonomously scheduling private showings, right through to nurture campaigns designed to identify and facilitate bespoke opportunities. Now that I've shown you what we can do for your house — will you allow me to briefly show you exactly how we do it?",
+    5: "Perfect. This next portion requires just a little participation from you. May I have your first name?",
+    6: () => `Wonderful, ${userName}. And the name of your business?`,
+    7: () => `Beautiful. ${businessName}, what an opportunity. To make this demonstration as relevant as possible — on an average day, approximately how many serious walk-in clients do you see?`,
+    8: "And what would you say is the average sale value for those serious walk-in clients?",
+    9: "Perfect. And for a private client — what does that sale typically look like?",
+    10: () => `${userName}, based on everything you've experienced today — can you see a concierge like this qualifying even one serious buyer per week? Setting one private showing? Facilitating one bespoke appointment? Because at those numbers, that's not a feature — that's infrastructure. This is the literal voice of your brand, available 24 hours a day, in every language, on every device, to every visitor who arrives at your door. When you're ready to move forward, your concierge will be here. Thank you for your time today.`
   };
-
-  try {
-    const res = await fetch(AI_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${OPENROUTER_KEY}`,
-        'HTTP-Referer': 'https://jaylancaster470-gif.github.io',
-        'X-Title': 'René CWB'
-      },
-      body: JSON.stringify(body)
-    });
-
-    if (!res.ok) {
-      const errData = await res.json().catch(() => ({}));
-      throw new Error(errData?.error?.message || `HTTP ${res.status}`);
-    }
-
-    const data = await res.json();
-    const reply = data?.choices?.[0]?.message?.content || '';
-
-    if (!reply) throw new Error('Empty response from AI');
-
-    conversationHistory.push({ role: 'model', parts: [{ text: reply }] });
-    return reply;
-
-  } catch (err) {
-    throw err;
-  }
+  const line = lines[s];
+  return typeof line === 'function' ? line() : line;
 }
 
-// ═══════════════════════════════════════════════════════════════════
-//  WEB SPEECH SYNTHESIS — René's voice
-// ═══════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
+// KEYWORD DETECTION
+// ═══════════════════════════════════════════════
+function detectAgreement(text) {
+  const t = text.toLowerCase();
+  return /\b(yes|yeah|yep|yup|sure|of course|definitely|absolutely|indeed|certainly|please|do|great|perfect|sounds good|okay|ok|alright)\b/.test(t);
+}
+function detectNegation(text) {
+  const t = text.toLowerCase();
+  return /\b(no|never|nope|not|wouldn't|would not|nah|certainly not|absolutely not)\b/.test(t);
+}
+
+// ═══════════════════════════════════════════════
+// VOICE SELECTION
+// ═══════════════════════════════════════════════
+const PREFERRED_VOICES = ['Samantha', 'Ava', 'Karen', 'Allison', 'Susan', 'Victoria', 'Fiona', 'Moira'];
+
 function pickVoice() {
-  const voices = window.speechSynthesis.getVoices();
-  // Prefer a premium female English voice
-  const preferred = [
-    'Samantha', 'Karen', 'Moira', 'Tessa', 'Victoria',
-    'Microsoft Aria Online (Natural) - English (United States)',
-    'Google UK English Female', 'Google US English',
-    'en-US', 'en-GB'
-  ];
-  for (const name of preferred) {
-    const v = voices.find(v => v.name.includes(name) || v.lang.startsWith(name));
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return null;
+
+  // Try preferred names first
+  for (const name of PREFERRED_VOICES) {
+    const v = voices.find(v => v.name === name);
     if (v) return v;
   }
-  return voices.find(v => v.lang.startsWith('en')) || voices[0] || null;
+  // Fallback: any en-US female-sounding
+  const enUS = voices.filter(v => v.lang && v.lang.startsWith('en'));
+  return enUS[0] || voices[0];
 }
 
-function speakText(text) {
-  return new Promise((resolve) => {
-    window.speechSynthesis.cancel();
-    setStatus('speaking');
-
-    const utter = new SpeechSynthesisUtterance(text);
-    currentUtterance = utter;
-
-    // Wait for voices to load
-    const setVoiceAndSpeak = () => {
-      utter.voice = pickVoice();
-      utter.rate  = 0.88;  // slightly slow — luxury pacing
-      utter.pitch = 1.0;
-      utter.volume = 1.0;
-
-      appendTranscript(text, false);
-
-      utter.onend = () => {
-        setStatus('idle');
-        resolve();
-      };
-      utter.onerror = (e) => {
-        if (e.error !== 'interrupted') {
-          setStatus('idle');
-        }
-        resolve();
-      };
-
-      window.speechSynthesis.speak(utter);
-    };
-
-    if (window.speechSynthesis.getVoices().length > 0) {
-      setVoiceAndSpeak();
-    } else {
-      window.speechSynthesis.onvoiceschanged = setVoiceAndSpeak;
+function loadVoices() {
+  const voices = speechSynthesis.getVoices();
+  if (voices.length) {
+    selectedVoice = pickVoice();
+    voicesLoaded = true;
+    if (pendingSpeak) {
+      pendingSpeak = false;
+      speakStage(stage);
     }
+  }
+}
+
+speechSynthesis.onvoiceschanged = loadVoices;
+loadVoices(); // try immediately (desktop browsers)
+
+// ═══════════════════════════════════════════════
+// SPEECH SYNTHESIS
+// ═══════════════════════════════════════════════
+function speakStage(s) {
+  const text = getScript(s);
+  if (!text) return;
+
+  // If voices not loaded yet, defer
+  if (!voicesLoaded) {
+    pendingSpeak = true;
+    // Attempt to trigger voice load on iOS
+    const dummy = new SpeechSynthesisUtterance(' ');
+    dummy.volume = 0;
+    speechSynthesis.speak(dummy);
+    return;
+  }
+
+  speechSynthesis.cancel();
+  isSpeaking = true;
+  setStatus('speaking');
+  hideRespond();
+
+  // Typewriter display
+  typeWrite(text, () => {
+    // Cursor stays until speech ends
   });
-}
 
-// ═══════════════════════════════════════════════════════════════════
-//  WEB SPEECH RECOGNITION — Listen for user
-// ═══════════════════════════════════════════════════════════════════
-function setupSpeechRecognition() {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SpeechRecognition) return false;
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.rate = 0.85;
+  utt.pitch = 1.0;
+  utt.volume = 1.0;
+  if (selectedVoice) utt.voice = selectedVoice;
 
-  recognition = new SpeechRecognition();
-  recognition.continuous      = false;
-  recognition.interimResults  = false;
-  recognition.lang            = 'en-US';
-  recognition.maxAlternatives = 1;
+  utt.onend = () => {
+    isSpeaking = false;
+    if (s === 10) {
+      // Closing — show restart option
+      setStatus('done');
+      showFinalState();
+    } else {
+      setStatus('listening');
+      showRespond();
+    }
+  };
 
-  return true;
-}
+  utt.onerror = (e) => {
+    isSpeaking = false;
+    setStatus('listening');
+    showRespond();
+  };
 
-function listenForUser() {
-  return new Promise((resolve, reject) => {
-    if (!recognition) {
-      reject(new Error('Speech recognition not available'));
+  // iOS Safari bug: speechSynthesis can get stuck, use resume workaround
+  const resumeTimer = setInterval(() => {
+    if (!speechSynthesis.speaking) {
+      clearInterval(resumeTimer);
       return;
     }
+    speechSynthesis.resume();
+  }, 5000);
 
+  utt.onend = () => {
+    clearInterval(resumeTimer);
+    isSpeaking = false;
+    if (s === 10) {
+      setStatus('done');
+      showFinalState();
+    } else {
+      setStatus('listening');
+      showRespond();
+    }
+  };
+  utt.onerror = () => {
+    clearInterval(resumeTimer);
+    isSpeaking = false;
     setStatus('listening');
-    recognitionActive = true;
+    showRespond();
+  };
+
+  speechSynthesis.speak(utt);
+}
+
+// ═══════════════════════════════════════════════
+// TYPEWRITER
+// ═══════════════════════════════════════════════
+function typeWrite(text, onDone) {
+  const el = document.getElementById('speech-text');
+  el.innerHTML = '';
+  let i = 0;
+  isTyping = true;
+  clearInterval(typingTimer);
+
+  function next() {
+    if (i < text.length) {
+      el.innerHTML = escHtml(text.slice(0, i + 1)) + '<span class="cursor"></span>';
+      i++;
+      // Vary speed slightly for natural feel
+      const delay = text[i - 1] === '.' || text[i - 1] === ',' || text[i - 1] === '—' ? 55 : 22;
+      typingTimer = setTimeout(next, delay);
+    } else {
+      el.innerHTML = escHtml(text) + '<span class="cursor"></span>';
+      isTyping = false;
+      if (onDone) onDone();
+    }
+  }
+  next();
+}
+
+function escHtml(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// ═══════════════════════════════════════════════
+// STATUS
+// ═══════════════════════════════════════════════
+function setStatus(state) {
+  const dot = document.getElementById('status-dot');
+  const txt = document.getElementById('status-text');
+  dot.className = 'status-dot ' + state;
+  if (state === 'speaking') txt.textContent = 'SPEAKING';
+  else if (state === 'listening') txt.textContent = 'LISTENING';
+  else txt.textContent = 'COMPLETE';
+  updateDots();
+}
+
+// ═══════════════════════════════════════════════
+// STAGE DOTS
+// ═══════════════════════════════════════════════
+function buildDots() {
+  const wrap = document.getElementById('stage-dots');
+  wrap.innerHTML = '';
+  for (let i = 0; i <= 10; i++) {
+    const d = document.createElement('div');
+    d.className = 'stage-dot';
+    d.id = 'dot-' + i;
+    wrap.appendChild(d);
+  }
+}
+function updateDots() {
+  for (let i = 0; i <= 10; i++) {
+    const d = document.getElementById('dot-' + i);
+    if (!d) continue;
+    if (i < stage) d.className = 'stage-dot done';
+    else if (i === stage) d.className = 'stage-dot current';
+    else d.className = 'stage-dot';
+  }
+}
+
+// ═══════════════════════════════════════════════
+// RESPOND BUTTON
+// ═══════════════════════════════════════════════
+function showRespond() {
+  const btn = document.getElementById('respond-btn');
+  const wrap = document.getElementById('text-input-wrap');
+  const hint = document.getElementById('tap-hint');
+
+  if (hasVoice) {
+    btn.classList.add('visible');
+    btn.textContent = '✦ Tap to Respond';
+    btn.classList.remove('recording');
+    hint.textContent = 'or tap anywhere to speak';
+  } else {
+    wrap.classList.add('visible');
+    hint.textContent = 'Type your response above';
+    setTimeout(() => {
+      document.getElementById('text-input').focus();
+    }, 300);
+  }
+}
+
+function hideRespond() {
+  document.getElementById('respond-btn').classList.remove('visible', 'recording');
+  document.getElementById('text-input-wrap').classList.remove('visible');
+  document.getElementById('tap-hint').textContent = '';
+}
+
+function showFinalState() {
+  const hint = document.getElementById('tap-hint');
+  hint.textContent = 'Experience complete';
+  // Show a subtle restart after 3s
+  setTimeout(() => {
+    hint.textContent = 'Tap ✦ to begin again';
+    hint.style.cursor = 'pointer';
+    hint.onclick = () => location.reload();
+  }, 3000);
+}
+
+// ═══════════════════════════════════════════════
+// SPEECH RECOGNITION
+// ═══════════════════════════════════════════════
+function initRecognition() {
+  const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRec) {
+    hasVoice = false;
+    return;
+  }
+  try {
+    recognition = new SpeechRec();
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.lang = 'en-US';
+    hasVoice = true;
 
     recognition.onresult = (e) => {
-      const transcript = e.results[0][0].transcript.trim();
-      recognitionActive = false;
-      resolve(transcript);
+      let interim = '';
+      let final = '';
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        if (e.results[i].isFinal) final += e.results[i][0].transcript;
+        else interim += e.results[i][0].transcript;
+      }
+      const display = final || interim;
+      if (display) document.getElementById('user-text').textContent = '"' + display + '"';
+      if (final) {
+        stopListening();
+        handleUserInput(final.trim());
+      }
     };
 
     recognition.onerror = (e) => {
-      recognitionActive = false;
-      if (e.error === 'no-speech') {
-        resolve(''); // User was silent
+      stopListening();
+      // If no speech detected, just re-show the respond button
+      if (e.error !== 'no-speech' && e.error !== 'aborted') {
+        // Fallback to text
+        hasVoice = false;
+        document.getElementById('respond-btn').classList.remove('visible');
+        document.getElementById('text-input-wrap').classList.add('visible');
       } else {
-        reject(new Error(e.error));
+        showRespond();
       }
     };
 
     recognition.onend = () => {
-      recognitionActive = false;
-      // If no result fired, resolve with empty
+      if (isListening) {
+        isListening = false;
+        document.getElementById('respond-btn').classList.remove('recording');
+        document.getElementById('respond-btn').textContent = '✦ Tap to Respond';
+      }
     };
-
-    try {
-      recognition.start();
-    } catch (e) {
-      recognitionActive = false;
-      reject(e);
-    }
-  });
-}
-
-// ═══════════════════════════════════════════════════════════════════
-//  GEMINI LIVE WEBSOCKET — Attempt
-// ═══════════════════════════════════════════════════════════════════
-function tryGeminiLiveWebSocket() {
-  return new Promise((resolve) => {
-    // Short timeout to test if WS connects at all
-    let resolved = false;
-    const timeout = setTimeout(() => {
-      if (!resolved) {
-        resolved = true;
-        resolve(false);
-      }
-    }, 4000);
-
-    try {
-      const ws = new WebSocket(GEMINI_WS_URL);
-
-      ws.onopen = () => {
-        // Send setup
-        ws.send(JSON.stringify({
-          setup: {
-            model: "models/gemini-2.0-flash-live-001",
-            generation_config: {
-              response_modalities: ["AUDIO"],
-              speech_config: { voice_config: { prebuilt_voice_config: { voice_name: "Aoede" } } }
-            },
-            system_instruction: { parts: [{ text: RENE_SYSTEM_PROMPT }] }
-          }
-        }));
-      };
-
-      ws.onmessage = (event) => {
-        try {
-          const msg = JSON.parse(event.data);
-          if (msg.setupComplete !== undefined) {
-            clearTimeout(timeout);
-            if (!resolved) {
-              resolved = true;
-              wsConn = ws;
-              resolve(true);
-            }
-          }
-        } catch (e) {}
-      };
-
-      ws.onerror = () => {
-        clearTimeout(timeout);
-        if (!resolved) {
-          resolved = true;
-          resolve(false);
-        }
-      };
-
-      ws.onclose = (e) => {
-        if (wsConn === ws) wsConn = null;
-        clearTimeout(timeout);
-        if (!resolved) {
-          resolved = true;
-          resolve(false);
-        }
-      };
-    } catch (e) {
-      clearTimeout(timeout);
-      if (!resolved) {
-        resolved = true;
-        resolve(false);
-      }
-    }
-  });
-}
-
-// ═══════════════════════════════════════════════════════════════════
-//  WEBSOCKET AUDIO — PCM capture & playback
-// ═══════════════════════════════════════════════════════════════════
-let mediaStream = null;
-let scriptProcessor = null;
-
-async function initAudioCapture() {
-  audioContext = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
-  mediaStream  = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, sampleRate: 16000 }, video: false });
-
-  const source = audioContext.createMediaStreamSource(mediaStream);
-  scriptProcessor = audioContext.createScriptProcessor(2048, 1, 1);
-
-  scriptProcessor.onaudioprocess = (e) => {
-    if (!isListening || !wsConn) return;
-    const float32 = e.inputBuffer.getChannelData(0);
-    const int16   = new Int16Array(float32.length);
-    for (let i = 0; i < float32.length; i++) {
-      int16[i] = Math.max(-32768, Math.min(32767, float32[i] * 32768));
-    }
-    const bytes  = new Uint8Array(int16.buffer);
-    const base64 = btoa(String.fromCharCode(...bytes));
-    wsConn.send(JSON.stringify({
-      realtimeInput: { mediaChunks: [{ data: base64, mimeType: 'audio/pcm;rate=16000' }] }
-    }));
-  };
-
-  source.connect(scriptProcessor);
-  scriptProcessor.connect(audioContext.destination);
-}
-
-async function playPCMChunk(base64Data, sampleRate = 24000) {
-  if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-  const bytes   = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
-  const int16   = new Int16Array(bytes.buffer);
-  const float32 = new Float32Array(int16.length);
-  for (let i = 0; i < int16.length; i++) float32[i] = int16[i] / 32768;
-
-  const buffer = audioContext.createBuffer(1, float32.length, sampleRate);
-  buffer.getChannelData(0).set(float32);
-
-  const source = audioContext.createBufferSource();
-  source.buffer = buffer;
-  source.connect(audioContext.destination);
-  source.start();
-
-  return new Promise(resolve => { source.onended = resolve; });
-}
-
-// ═══════════════════════════════════════════════════════════════════
-//  WEBSOCKET CONVERSATION LOOP
-// ═══════════════════════════════════════════════════════════════════
-async function runWebSocketConversation(firstTurn = true) {
-  if (!wsConn) return;
-
-  wsConn.onmessage = async (event) => {
-    try {
-      const msg = JSON.parse(event.data);
-
-      // Handle audio response
-      if (msg.serverContent?.modelTurn?.parts) {
-        for (const part of msg.serverContent.modelTurn.parts) {
-          if (part.inlineData?.mimeType?.startsWith('audio/pcm')) {
-            setStatus('speaking');
-            await playPCMChunk(part.inlineData.data, 24000);
-          }
-          if (part.text) {
-            appendTranscript(part.text);
-          }
-        }
-      }
-
-      // Turn complete — now listen for user
-      if (msg.serverContent?.turnComplete) {
-        setStatus('idle');
-        // Short pause then listen
-        await new Promise(r => setTimeout(r, 600));
-        await startListeningWS();
-      }
-
-    } catch (e) {}
-  };
-
-  if (firstTurn) {
-    // Trigger René's opening line via text turn
-    wsConn.send(JSON.stringify({
-      clientContent: {
-        turns: [{ role: 'user', parts: [{ text: 'Begin — say your opening line now.' }] }],
-        turnComplete: true
-      }
-    }));
+  } catch(e) {
+    hasVoice = false;
   }
 }
 
-async function startListeningWS() {
-  setStatus('listening');
-  isListening = true;
-
-  // For WS mode, we stream audio and send turn_complete when done
-  // User clicks mic button to stop
-  micBtn.style.display = 'block';
-  micBtn.classList.add('active');
-  micBtn.textContent = 'Listening… (tap to stop)';
-
-  micBtn.onclick = async () => {
-    isListening = false;
-    micBtn.classList.remove('active');
-    micBtn.style.display = 'none';
-    setStatus('speaking');
-    if (wsConn) {
-      wsConn.send(JSON.stringify({ clientContent: { turnComplete: true } }));
-    }
-  };
-}
-
-// ═══════════════════════════════════════════════════════════════════
-//  REST CONVERSATION LOOP (primary reliable path)
-// ═══════════════════════════════════════════════════════════════════
-async function runConversation() {
-  if (sessionStarted) return;
-  sessionStarted = true;
-
-  const hasSpeechRecognition = setupSpeechRecognition();
-
-  // ── OPENING: René speaks first ──────────────────
+function startListening() {
+  if (!recognition || isListening) return;
   try {
-    setStatus('connecting');
-    const opening = await callGeminiREST('BEGIN_SESSION_OPENING');
-    setStatus('speaking');
-    await speakText(opening);
-  } catch (err) {
-    showError('Could not connect to René. Please check your connection.');
-    setStatus('idle');
-    return;
-  }
-
-  // ── CONVERSATION LOOP ───────────────────────────
-  while (true) {
-    setStatus('idle');
-    await new Promise(r => setTimeout(r, 400));
-
-    let userInput = '';
-
-    if (hasSpeechRecognition) {
-      // Show mic button for manual control
-      micBtn.textContent = 'Tap to Speak';
-      micBtn.style.display = 'block';
-      micBtn.classList.remove('active');
-
-      userInput = await new Promise((resolve) => {
-        micBtn.onclick = async () => {
-          micBtn.style.display = 'none';
-          try {
-            setStatus('listening');
-            const text = await listenForUser();
-            setStatus('idle');
-            resolve(text);
-          } catch (e) {
-            setStatus('idle');
-            resolve('');
-          }
-        };
-      });
-
-    } else {
-      // Fallback: text input prompt
-      userInput = await promptTextInput();
-    }
-
-    if (!userInput || userInput.trim() === '') {
-      // Re-prompt gently
-      continue;
-    }
-
-    // Show user's words
-    appendTranscript(userInput, true);
-    micBtn.style.display = 'none';
-
-    // Get René's response
-    try {
-      setStatus('connecting');
-      const reply = await callGeminiREST(userInput);
-      setStatus('speaking');
-      await speakText(reply);
-    } catch (err) {
-      showError('Connection interrupted — please try again.');
-      setStatus('idle');
-    }
+    isListening = true;
+    document.getElementById('respond-btn').classList.add('recording');
+    document.getElementById('respond-btn').textContent = '● Recording…';
+    document.getElementById('user-text').textContent = '';
+    recognition.start();
+  } catch(e) {
+    isListening = false;
   }
 }
 
-// Text input fallback for browsers without speech recognition
-function promptTextInput() {
-  return new Promise((resolve) => {
-    // Create a minimal input overlay
-    const inputWrapper = document.createElement('div');
-    inputWrapper.style.cssText = `
-      display:flex; gap:0.8rem; align-items:center;
-      margin-top: 1.5rem; max-width: 500px; width: 100%;
-    `;
+function stopListening() {
+  if (!recognition || !isListening) return;
+  isListening = false;
+  document.getElementById('respond-btn').classList.remove('recording');
+  try { recognition.stop(); } catch(e) {}
+}
 
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.placeholder = 'Type your response…';
-    input.style.cssText = `
-      flex:1; background:transparent; border:none; border-bottom:1px solid rgba(201,168,76,0.4);
-      color:#f0ece4; font-family:'Inter',sans-serif; font-size:0.9rem; font-weight:300;
-      padding:0.6rem 0; outline:none; letter-spacing:0.05em;
-    `;
+// ═══════════════════════════════════════════════
+// USER INPUT HANDLER
+// ═══════════════════════════════════════════════
+function handleUserInput(text) {
+  if (!text) return;
+  hideRespond();
+  document.getElementById('user-text').textContent = '"' + text + '"';
 
-    const sendBtn = document.createElement('button');
-    sendBtn.textContent = '→';
-    sendBtn.style.cssText = `
-      background:none; border:none; color:#c9a84c; font-size:1.4rem; cursor:pointer; padding:0 0.4rem;
-    `;
+  let nextStage = stage + 1;
 
-    const submit = () => {
-      const val = input.value.trim();
-      inputWrapper.remove();
-      resolve(val);
-    };
+  // Stage-specific logic
+  if (stage === 0) {
+    // Any response → advance to stage 1
+    nextStage = 1;
+  } else if (stage === 1) {
+    // Looking for agreement to advance to stage 2
+    if (detectAgreement(text)) nextStage = 2;
+    else {
+      // Re-ask / repeat stage 1 response? Or just advance anyway for demo flow
+      nextStage = 2; // advance regardless for demo fluidity
+    }
+  } else if (stage === 2) {
+    if (detectAgreement(text)) nextStage = 3;
+    else nextStage = 3;
+  } else if (stage === 3) {
+    // Looking for negation (wouldn't do that) → advance to 4
+    nextStage = 4; // advance regardless
+  } else if (stage === 4) {
+    if (detectAgreement(text)) nextStage = 5;
+    else nextStage = 5;
+  } else if (stage === 5) {
+    // Capture name
+    userName = extractFirstWord(text);
+    nextStage = 6;
+  } else if (stage === 6) {
+    // Capture business name
+    businessName = text.trim();
+    nextStage = 7;
+  } else if (stage === 7) {
+    // Capture walk-in count
+    nextStage = 8;
+  } else if (stage === 8) {
+    // Capture avg sale value
+    nextStage = 9;
+  } else if (stage === 9) {
+    // Capture private client value
+    nextStage = 10;
+  }
 
-    sendBtn.onclick = submit;
-    input.onkeydown = (e) => { if (e.key === 'Enter') submit(); };
+  stage = nextStage;
+  updateDots();
 
-    inputWrapper.appendChild(input);
-    inputWrapper.appendChild(sendBtn);
-    transcriptBox.after(inputWrapper);
-    input.focus();
+  // Small pause before René responds
+  setTimeout(() => {
+    speakStage(stage);
+  }, 600);
+}
 
-    setStatus('idle');
+function extractFirstWord(text) {
+  // Capitalize first letter of first word
+  const word = text.trim().split(/\s+/)[0];
+  return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+}
+
+// ═══════════════════════════════════════════════
+// TEXT INPUT HANDLING
+// ═══════════════════════════════════════════════
+function setupTextInput() {
+  const input = document.getElementById('text-input');
+  const btn = document.getElementById('text-send');
+
+  function submit() {
+    const val = input.value.trim();
+    if (!val) return;
+    input.value = '';
+    input.blur();
+    handleUserInput(val);
+  }
+
+  btn.addEventListener('click', submit);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); submit(); }
   });
 }
 
-// ═══════════════════════════════════════════════════════════════════
-//  SESSION INIT
-// ═══════════════════════════════════════════════════════════════════
-async function startSession() {
-  hero.classList.add('fade-out');
-  setTimeout(() => { hero.style.display = 'none'; }, 800);
-
-  overlay.classList.add('visible');
-  setStatus('connecting');
-  clearTranscript();
-  conversationHistory = [];
-  sessionStarted = false;
-
-  // Brief pause for overlay to appear
-  await new Promise(r => setTimeout(r, 600));
-
-  // Attempt Gemini Live WebSocket first
-  console.log('[René] Attempting Gemini Live WebSocket…');
-  const wsOk = await tryGeminiLiveWebSocket();
-
-  if (wsOk) {
-    console.log('[René] WebSocket connected — using live streaming');
-    useWebSocket = true;
-    try {
-      await initAudioCapture();
-      await runWebSocketConversation(true);
-    } catch (e) {
-      console.warn('[René] WebSocket audio failed, falling back to REST:', e);
-      useWebSocket = false;
-      runConversation();
-    }
+// ═══════════════════════════════════════════════
+// TAP ANYWHERE TO RESPOND
+// ═══════════════════════════════════════════════
+document.getElementById('conversation').addEventListener('click', (e) => {
+  // Only if we're in listening state and using voice
+  if (!hasVoice || isSpeaking) return;
+  const btn = document.getElementById('respond-btn');
+  if (!btn.classList.contains('visible') && !isListening) return;
+  if (isListening) {
+    stopListening();
   } else {
-    console.log('[René] WebSocket unavailable — using REST + Web Speech');
-    useWebSocket = false;
-    runConversation();
+    startListening();
   }
-}
-
-function endSession() {
-  // Stop speech
-  window.speechSynthesis.cancel();
-  if (recognition) { try { recognition.abort(); } catch(e) {} }
-  if (wsConn) { try { wsConn.close(); } catch(e) {} wsConn = null; }
-  if (mediaStream) { mediaStream.getTracks().forEach(t => t.stop()); mediaStream = null; }
-  if (scriptProcessor) { try { scriptProcessor.disconnect(); } catch(e) {} scriptProcessor = null; }
-
-  // Reset UI
-  overlay.classList.remove('visible');
-  hero.style.display = 'flex';
-  setTimeout(() => hero.classList.remove('fade-out'), 50);
-  setStatus('idle');
-  micBtn.style.display = 'none';
-  clearTranscript();
-  conversationHistory = [];
-  sessionStarted = false;
-  isListening = false;
-}
-
-// ═══════════════════════════════════════════════════════════════════
-//  EVENT LISTENERS
-// ═══════════════════════════════════════════════════════════════════
-beginBtn.addEventListener('click', startSession);
-closeBtn.addEventListener('click', endSession);
-
-// Preload voices
-if (window.speechSynthesis) {
-  window.speechSynthesis.getVoices();
-  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-}
-
-// Prevent accidental close
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && overlay.classList.contains('visible')) endSession();
 });
+
+document.getElementById('respond-btn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (isListening) stopListening();
+  else startListening();
+});
+
+// ═══════════════════════════════════════════════
+// BEGIN BUTTON
+// ═══════════════════════════════════════════════
+document.getElementById('begin-btn').addEventListener('click', () => {
+  // This user gesture unlocks AudioContext and SpeechSynthesis on iOS
+  const landing = document.getElementById('landing');
+  const conv = document.getElementById('conversation');
+
+  landing.classList.add('hidden');
+  setTimeout(() => {
+    conv.classList.add('active');
+  }, 400);
+
+  // Trigger voice loading if not done yet
+  if (!voicesLoaded) {
+    // Attempt to prime voices
+    const dummy = new SpeechSynthesisUtterance(' ');
+    dummy.volume = 0;
+    speechSynthesis.speak(dummy);
+    // Give iOS a moment to load voices
+    setTimeout(() => {
+      loadVoices();
+      if (!voicesLoaded) {
+        // Still not loaded, set flag and force speak
+        voicesLoaded = true;
+        selectedVoice = pickVoice();
+      }
+      speakStage(0);
+    }, 600);
+  } else {
+    setTimeout(() => speakStage(0), 500);
+  }
+});
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+function init() {
+  buildDots();
+  updateDots();
+  initRecognition();
+  setupTextInput();
+}
+
+init();
 </script>
 </body>
 </html>
