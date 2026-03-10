@@ -3,1268 +3,1117 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>House of Laurent — Where Timeless Elegance Meets Modern Experience</title>
+  <title>René — Private AI Client Command Interface™</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
       --gold: #c9a84c;
-      --gold-light: #e2c47a;
-      --gold-pale: #f0dfa0;
-      --dark: #0a0a0a;
-      --dark-2: #111111;
-      --dark-3: #1a1a1a;
-      --dark-4: #222222;
-      --text: #e8e0d0;
-      --text-muted: #9a9080;
-      --white: #ffffff;
+      --gold-light: #e8c96a;
+      --gold-dim: rgba(201,168,76,0.18);
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --text: #f0ece4;
+      --muted: #7a7060;
     }
 
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--dark);
+    html, body {
+      height: 100%;
+      background: var(--bg);
       color: var(--text);
-      font-family: 'Lato', sans-serif;
-      font-weight: 300;
-      overflow-x: hidden;
-      line-height: 1.7;
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
     }
 
-    /* ── SCROLLBAR ── */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--dark); }
-    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+    /* ─── HERO SCREEN ─────────────────────────────── */
+    #hero {
+      position: fixed; inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      z-index: 10;
+      background: var(--bg);
+      transition: opacity 0.8s ease;
+    }
 
-    /* ── NAV ── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      padding: 1.5rem 5%;
-      display: flex; align-items: center; justify-content: space-between;
-      background: linear-gradient(to bottom, rgba(10,10,10,0.98) 0%, rgba(10,10,10,0) 100%);
-      transition: background 0.4s;
-    }
-    nav.scrolled { background: rgba(10,10,10,0.97); border-bottom: 1px solid rgba(201,168,76,0.15); }
-    .nav-logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.3rem;
-      letter-spacing: 0.12em;
-      color: var(--gold);
-      text-decoration: none;
-    }
-    .nav-logo span { color: var(--text); }
-    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-    .nav-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.78rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      transition: color 0.3s;
-    }
-    .nav-links a:hover { color: var(--gold); }
-    .nav-cta {
-      border: 1px solid var(--gold);
-      color: var(--gold) !important;
-      padding: 0.5rem 1.4rem;
-      border-radius: 0;
-      transition: all 0.3s !important;
-    }
-    .nav-cta:hover { background: var(--gold); color: var(--dark) !important; }
-    .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
-    .nav-hamburger span { width: 24px; height: 1px; background: var(--gold); display: block; }
+    #hero.fade-out { opacity: 0; pointer-events: none; }
 
-    /* ── HERO ── */
-    .hero {
-      min-height: 100vh;
-      display: flex; align-items: center; justify-content: center;
-      position: relative; overflow: hidden;
-      background: var(--dark);
-    }
-    .hero-bg {
-      position: absolute; inset: 0;
-      background:
-        radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,168,76,0.06) 0%, transparent 70%),
-        radial-gradient(ellipse 40% 40% at 80% 20%, rgba(201,168,76,0.04) 0%, transparent 60%),
-        linear-gradient(180deg, #0a0a0a 0%, #0d0d0d 100%);
-    }
-    .hero-lines {
-      position: absolute; inset: 0; pointer-events: none;
-      background-image:
-        linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
-      background-size: 80px 80px;
-    }
-    .hero-content {
-      position: relative; z-index: 2;
-      text-align: center; padding: 2rem;
-      max-width: 900px;
-      animation: fadeUp 1.2s ease-out both;
-    }
     .hero-eyebrow {
-      font-size: 0.72rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 200;
+      font-size: clamp(0.65rem, 1.2vw, 0.8rem);
       letter-spacing: 0.35em;
       text-transform: uppercase;
       color: var(--gold);
-      margin-bottom: 1.8rem;
-      display: flex; align-items: center; justify-content: center; gap: 1rem;
+      margin-bottom: 2.2rem;
+      opacity: 0.85;
     }
-    .hero-eyebrow::before, .hero-eyebrow::after {
-      content: '';
-      width: 50px; height: 1px;
-      background: linear-gradient(to right, transparent, var(--gold));
-    }
-    .hero-eyebrow::after { background: linear-gradient(to left, transparent, var(--gold)); }
-    .hero h1 {
+
+    .hero-title {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(3rem, 7vw, 6rem);
-      font-weight: 400;
-      line-height: 1.08;
-      color: var(--white);
-      margin-bottom: 0.3em;
+      font-size: clamp(2.4rem, 5.5vw, 5rem);
+      font-weight: 500;
+      text-align: center;
+      line-height: 1.12;
       letter-spacing: -0.01em;
+      color: var(--text);
+      max-width: 800px;
+      padding: 0 2rem;
     }
-    .hero h1 em {
+
+    .hero-title em {
       font-style: italic;
       color: var(--gold);
     }
-    .hero-tagline {
-      font-size: clamp(0.9rem, 2vw, 1.15rem);
-      color: var(--text-muted);
-      letter-spacing: 0.08em;
-      margin-bottom: 3.5rem;
+
+    .hero-subtitle {
+      font-family: 'Inter', sans-serif;
       font-weight: 300;
-    }
-    .hero-actions {
-      display: flex; align-items: center; justify-content: center; gap: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .btn-primary {
-      display: inline-block;
-      background: var(--gold);
-      color: var(--dark);
-      padding: 1rem 2.8rem;
-      font-family: 'Lato', sans-serif;
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      text-decoration: none;
-      border: none; cursor: pointer;
-      transition: all 0.3s;
-      position: relative; overflow: hidden;
-    }
-    .btn-primary::after {
-      content: '';
-      position: absolute; inset: 0;
-      background: rgba(255,255,255,0.12);
-      transform: translateX(-100%);
-      transition: transform 0.3s;
-    }
-    .btn-primary:hover::after { transform: translateX(0); }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(201,168,76,0.3); }
-    .btn-ghost {
-      display: inline-block;
-      border: 1px solid rgba(201,168,76,0.4);
-      color: var(--gold);
-      padding: 1rem 2.8rem;
-      font-family: 'Lato', sans-serif;
-      font-size: 0.78rem;
-      font-weight: 400;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      text-decoration: none;
-      background: transparent; cursor: pointer;
-      transition: all 0.3s;
-    }
-    .btn-ghost:hover { background: rgba(201,168,76,0.1); border-color: var(--gold); }
-    .hero-scroll {
-      position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
-      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
-      color: var(--text-muted); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
-      animation: bounce 2s ease-in-out infinite;
-    }
-    .hero-scroll::after {
-      content: '';
-      width: 1px; height: 40px;
-      background: linear-gradient(to bottom, var(--gold), transparent);
-    }
-
-    /* ── DIAMOND DIVIDER ── */
-    .divider {
-      text-align: center; padding: 0.5rem;
-      color: var(--gold); font-size: 1.1rem;
-      opacity: 0.5;
-    }
-
-    /* ── SECTION BASE ── */
-    section { padding: 8rem 5%; }
-    .section-eyebrow {
-      font-size: 0.68rem;
-      letter-spacing: 0.4em;
-      text-transform: uppercase;
-      color: var(--gold);
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-    .section-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2.2rem, 4.5vw, 3.8rem);
-      font-weight: 400;
-      text-align: center;
-      color: var(--white);
-      line-height: 1.15;
-      margin-bottom: 1.2rem;
-    }
-    .section-subtitle {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 1rem;
-      max-width: 560px;
-      margin: 0 auto 5rem;
-      line-height: 1.8;
-    }
-    .gold-line {
-      width: 60px; height: 1px;
-      background: var(--gold);
-      margin: 1.5rem auto;
-    }
-
-    /* ── SERVICES ── */
-    #services { background: var(--dark-2); }
-    .services-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 2px;
-      max-width: 1400px; margin: 0 auto;
-    }
-    .service-card {
-      background: var(--dark-3);
-      padding: 3rem 2.5rem;
-      position: relative; overflow: hidden;
-      cursor: default;
-      transition: all 0.4s;
-      border: 1px solid rgba(201,168,76,0.06);
-    }
-    .service-card::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(to right, transparent, var(--gold), transparent);
-      transform: scaleX(0);
-      transition: transform 0.4s;
-    }
-    .service-card:hover { background: #1f1f1f; transform: translateY(-4px); }
-    .service-card:hover::before { transform: scaleX(1); }
-    .service-icon {
-      font-size: 2.2rem;
-      margin-bottom: 1.5rem;
-      display: block;
-      filter: sepia(1) saturate(3) hue-rotate(10deg);
-    }
-    .service-number {
-      position: absolute; top: 1.5rem; right: 2rem;
-      font-family: 'Playfair Display', serif;
-      font-size: 3.5rem;
-      color: rgba(201,168,76,0.06);
-      font-weight: 700;
-      line-height: 1;
-    }
-    .service-card h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.35rem;
-      font-weight: 500;
-      color: var(--white);
-      margin-bottom: 0.8rem;
-      letter-spacing: 0.02em;
-    }
-    .service-card p {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      line-height: 1.8;
-    }
-    .service-card-link {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      margin-top: 1.5rem;
-      color: var(--gold);
-      font-size: 0.72rem;
+      font-size: clamp(0.75rem, 1.4vw, 0.95rem);
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      text-decoration: none;
-      transition: gap 0.3s;
-    }
-    .service-card-link:hover { gap: 0.9rem; }
-
-    /* ── ABOUT ── */
-    #about {
-      background: var(--dark);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6rem;
-      align-items: center;
-      max-width: 1400px; margin: 0 auto;
-    }
-    .about-visual {
-      position: relative; aspect-ratio: 3/4;
-      background: var(--dark-3);
-      overflow: hidden;
-    }
-    .about-visual-inner {
-      width: 100%; height: 100%;
-      background:
-        linear-gradient(135deg, rgba(201,168,76,0.05) 0%, transparent 50%, rgba(201,168,76,0.03) 100%),
-        repeating-linear-gradient(
-          45deg,
-          transparent 0px,
-          transparent 30px,
-          rgba(201,168,76,0.02) 30px,
-          rgba(201,168,76,0.02) 31px
-        );
-      display: flex; align-items: center; justify-content: center;
-    }
-    .about-monogram {
-      font-family: 'Playfair Display', serif;
-      font-size: 8rem;
-      color: rgba(201,168,76,0.12);
-      font-weight: 700;
-      letter-spacing: -0.05em;
-      user-select: none;
-    }
-    .about-visual-badge {
-      position: absolute; bottom: 2rem; right: -1.5rem;
-      background: var(--gold);
-      color: var(--dark);
-      padding: 1.5rem 2rem;
-      text-align: center;
-    }
-    .about-visual-badge .badge-num {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.5rem;
-      font-weight: 700;
-      line-height: 1;
-      display: block;
-    }
-    .about-visual-badge .badge-text {
-      font-size: 0.65rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      display: block; margin-top: 0.2rem;
-    }
-    .about-content { padding: 2rem 0; }
-    .about-content .section-eyebrow,
-    .about-content .section-title,
-    .about-content .gold-line { text-align: left; margin-left: 0; }
-    .about-content p {
-      color: var(--text-muted);
-      margin-bottom: 1.4rem;
-      font-size: 0.95rem;
-      line-height: 1.9;
-    }
-    .about-stats {
-      display: flex; gap: 3rem;
-      margin-top: 3rem;
-      padding-top: 3rem;
-      border-top: 1px solid rgba(201,168,76,0.15);
-    }
-    .about-stat .stat-num {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.5rem;
-      color: var(--gold);
-      line-height: 1;
-    }
-    .about-stat .stat-label {
-      font-size: 0.72rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-top: 0.3rem;
+      color: var(--muted);
+      margin-top: 1.6rem;
+      margin-bottom: 5rem;
     }
 
-    /* ── CONSULTATION ── */
-    #consultation { background: var(--dark-2); }
-    .consultation-inner {
-      max-width: 900px; margin: 0 auto;
-      text-align: center;
-    }
-    .consultation-form {
-      background: var(--dark-3);
-      border: 1px solid rgba(201,168,76,0.12);
-      padding: 4rem;
-      margin-top: 3rem;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-    }
-    .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
-    .form-group.full { grid-column: 1 / -1; }
-    .form-group label {
-      font-size: 0.68rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--gold);
-    }
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      background: var(--dark-4);
-      border: 1px solid rgba(201,168,76,0.15);
-      color: var(--text);
-      padding: 0.9rem 1.2rem;
-      font-family: 'Lato', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 300;
+    /* ─── ORB BUTTON ──────────────────────────────── */
+    #begin-btn {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      cursor: pointer;
+      border: none;
+      background: transparent;
       outline: none;
-      transition: border-color 0.3s;
-      width: 100%;
-    }
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus { border-color: var(--gold); }
-    .form-group select { appearance: none; cursor: pointer; }
-    .form-group textarea { resize: vertical; min-height: 120px; }
-    .form-submit {
-      grid-column: 1 / -1;
-      text-align: center; margin-top: 1rem;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    /* ── FOOTER ── */
-    footer {
-      background: var(--dark);
-      border-top: 1px solid rgba(201,168,76,0.1);
-      padding: 5rem 5% 2.5rem;
+    .orb-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px solid rgba(201,168,76,0.25);
+      animation: ring-pulse 3s ease-in-out infinite;
     }
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 4rem;
-      max-width: 1400px; margin: 0 auto;
-      padding-bottom: 4rem;
-      border-bottom: 1px solid rgba(201,168,76,0.08);
+    .orb-ring:nth-child(2) { animation-delay: 1s; inset: -16px; border-color: rgba(201,168,76,0.12); }
+    .orb-ring:nth-child(3) { animation-delay: 2s; inset: -32px; border-color: rgba(201,168,76,0.06); }
+
+    @keyframes ring-pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.06); opacity: 0.6; }
     }
-    .footer-brand .nav-logo { font-size: 1.5rem; margin-bottom: 1.2rem; display: block; }
-    .footer-brand p { color: var(--text-muted); font-size: 0.88rem; line-height: 1.8; max-width: 300px; }
-    .footer-col h4 {
-      font-size: 0.65rem;
+
+    .orb-core {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 35%, #d4b060 0%, #b8902e 40%, #7a5e1a 75%, #3a2c0a 100%);
+      box-shadow:
+        0 0 40px rgba(201,168,76,0.35),
+        0 0 80px rgba(201,168,76,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.25);
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+
+    .orb-diamond {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) rotate(45deg);
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(201,168,76,0.4) 50%, rgba(255,255,255,0.7) 100%);
+      box-shadow: 0 0 20px rgba(255,255,255,0.6);
+    }
+
+    #begin-btn:hover .orb-core {
+      box-shadow:
+        0 0 60px rgba(201,168,76,0.55),
+        0 0 120px rgba(201,168,76,0.28),
+        inset 0 1px 0 rgba(255,255,255,0.3);
+      transform: scale(1.04);
+    }
+
+    .orb-label {
+      position: absolute;
+      bottom: -52px;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 0.7rem;
       letter-spacing: 0.3em;
       text-transform: uppercase;
       color: var(--gold);
-      margin-bottom: 1.5rem;
+      opacity: 0.8;
     }
-    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.8rem; }
-    .footer-col ul a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.88rem;
-      transition: color 0.3s;
-    }
-    .footer-col ul a:hover { color: var(--gold); }
-    .footer-bottom {
-      max-width: 1400px; margin: 2.5rem auto 0;
-      display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 1rem;
-      color: var(--text-muted);
-      font-size: 0.75rem; letter-spacing: 0.08em;
-    }
-    .footer-bottom a { color: var(--text-muted); text-decoration: none; }
-    .footer-bottom a:hover { color: var(--gold); }
 
-    /* ── RENE VOICE AGENT ── */
-    #rene-orb-container {
-      position: fixed;
-      bottom: 2.5rem; right: 2.5rem;
-      z-index: 9999;
-      display: flex; flex-direction: column; align-items: flex-end; gap: 1rem;
-    }
-    .rene-tooltip {
-      background: rgba(10,10,10,0.95);
-      border: 1px solid rgba(201,168,76,0.3);
-      color: var(--text);
-      padding: 0.6rem 1.2rem;
-      font-size: 0.78rem;
-      letter-spacing: 0.05em;
-      white-space: nowrap;
-      animation: fadeIn 0.6s ease-out 2s both;
-      pointer-events: none;
-    }
-    .rene-tooltip strong { color: var(--gold); }
-    #rene-orb {
-      width: 80px; height: 80px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, var(--gold-pale), var(--gold) 50%, #a07c2a);
-      cursor: pointer;
-      position: relative;
-      display: flex; align-items: center; justify-content: center;
-      flex-direction: column; gap: 2px;
-      box-shadow:
-        0 0 0 0 rgba(201,168,76,0.4),
-        0 8px 30px rgba(201,168,76,0.25);
-      animation: pulse-orb 2.8s ease-in-out infinite;
-      transition: transform 0.3s, box-shadow 0.3s;
-      user-select: none;
-    }
-    #rene-orb:hover {
-      transform: scale(1.08);
-      box-shadow: 0 0 0 0 rgba(201,168,76,0.6), 0 12px 40px rgba(201,168,76,0.4);
-    }
-    #rene-orb.active {
-      animation: pulse-active 1s ease-in-out infinite;
-      box-shadow: 0 0 0 8px rgba(201,168,76,0.2), 0 8px 40px rgba(201,168,76,0.5);
-    }
-    #rene-orb.listening {
-      animation: pulse-listen 0.6s ease-in-out infinite;
-    }
-    .rene-orb-label {
-      font-family: 'Lato', sans-serif;
-      font-size: 0.58rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--dark);
-    }
-    .rene-orb-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--dark);
-      letter-spacing: 0.05em;
-    }
-    /* Ripple rings */
-    #rene-orb::before, #rene-orb::after {
-      content: '';
-      position: absolute; inset: -8px;
-      border-radius: 50%;
-      border: 1px solid rgba(201,168,76,0.3);
-      animation: ripple 2.8s ease-out infinite;
-    }
-    #rene-orb::after { animation-delay: 1.4s; }
-
-    /* ── RENE MODAL ── */
-    #rene-modal {
-      position: fixed;
-      bottom: 9rem; right: 2.5rem;
-      width: 340px;
-      background: #0f0f0f;
-      border: 1px solid rgba(201,168,76,0.2);
-      z-index: 9998;
-      display: none;
+    /* ─── OVERLAY ─────────────────────────────────── */
+    #overlay {
+      position: fixed; inset: 0;
+      background: rgba(10,10,10,0.97);
+      z-index: 100;
+      display: flex;
       flex-direction: column;
-      overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-      animation: slideUp 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.7s ease;
+      padding: 2rem;
     }
-    #rene-modal.open { display: flex; }
-    .rene-modal-header {
-      background: linear-gradient(135deg, #1a1500, #2a1f00);
-      border-bottom: 1px solid rgba(201,168,76,0.2);
-      padding: 1.2rem 1.5rem;
-      display: flex; align-items: center; gap: 1rem;
+
+    #overlay.visible {
+      opacity: 1;
+      pointer-events: all;
     }
-    .rene-avatar {
-      width: 42px; height: 42px; border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, var(--gold-pale), var(--gold) 60%);
-      display: flex; align-items: center; justify-content: center;
+
+    .overlay-logo {
       font-family: 'Playfair Display', serif;
-      font-size: 1.1rem; color: var(--dark); font-weight: 700;
-      flex-shrink: 0;
-    }
-    .rene-modal-title { flex: 1; }
-    .rene-modal-title h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1rem; color: var(--white); margin: 0;
-    }
-    .rene-modal-title p { font-size: 0.7rem; color: var(--gold); margin: 0.1rem 0 0; letter-spacing: 0.1em; }
-    .rene-modal-close {
-      background: none; border: none; color: var(--text-muted);
-      font-size: 1.2rem; cursor: pointer; padding: 0.2rem;
-      transition: color 0.2s; line-height: 1;
-    }
-    .rene-modal-close:hover { color: var(--gold); }
-
-    .rene-transcript {
-      flex: 1; overflow-y: auto;
-      padding: 1.2rem;
-      display: flex; flex-direction: column; gap: 0.8rem;
-      min-height: 200px; max-height: 280px;
-    }
-    .rene-transcript::-webkit-scrollbar { width: 3px; }
-    .rene-transcript::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.3); }
-
-    .rene-bubble {
-      max-width: 85%;
-      padding: 0.7rem 1rem;
-      font-size: 0.85rem;
-      line-height: 1.5;
-      border-radius: 2px;
-      animation: fadeIn 0.3s ease-out;
-    }
-    .rene-bubble.rene { background: rgba(201,168,76,0.1); border-left: 2px solid var(--gold); color: var(--text); align-self: flex-start; }
-    .rene-bubble.user { background: rgba(255,255,255,0.05); color: var(--text-muted); align-self: flex-end; text-align: right; font-style: italic; }
-
-    .rene-status-bar {
-      padding: 0.8rem 1.5rem;
-      border-top: 1px solid rgba(201,168,76,0.1);
-      display: flex; align-items: center; gap: 0.8rem;
-    }
-    .rene-status-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--gold);
-      animation: blink 1.5s ease-in-out infinite;
-      flex-shrink: 0;
-    }
-    .rene-status-dot.idle { background: #555; animation: none; }
-    .rene-status-dot.speaking { background: #4ade80; }
-    #rene-status-text { font-size: 0.75rem; color: var(--text-muted); flex: 1; }
-
-    .rene-controls {
-      padding: 0.9rem 1.5rem 1.2rem;
-      display: flex; gap: 0.7rem; justify-content: center;
-    }
-    .rene-btn {
-      flex: 1; padding: 0.7rem 1rem;
-      background: transparent;
-      border: 1px solid rgba(201,168,76,0.25);
+      font-size: 1.1rem;
+      font-weight: 400;
+      letter-spacing: 0.18em;
       color: var(--gold);
-      font-family: 'Lato', sans-serif;
-      font-size: 0.68rem;
-      letter-spacing: 0.15em;
+      opacity: 0.7;
+      position: absolute;
+      top: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+
+    /* Live orb inside overlay */
+    #live-orb {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 35%, #d4b060 0%, #b8902e 40%, #7a5e1a 75%, #3a2c0a 100%);
+      box-shadow: 0 0 40px rgba(201,168,76,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+      position: relative;
+      transition: box-shadow 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    #live-orb.speaking {
+      animation: orb-speak 0.5s ease-in-out infinite alternate;
+      box-shadow: 0 0 60px rgba(201,168,76,0.6), 0 0 120px rgba(201,168,76,0.3), inset 0 1px 0 rgba(255,255,255,0.25);
+    }
+
+    #live-orb.listening {
+      box-shadow: 0 0 40px rgba(100,160,255,0.4), 0 0 80px rgba(100,160,255,0.2), inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+
+    @keyframes orb-speak {
+      from { transform: scale(1); }
+      to { transform: scale(1.07); }
+    }
+
+    .orb-diamond-live {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) rotate(45deg);
+      width: 28px; height: 28px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(201,168,76,0.4) 50%, rgba(255,255,255,0.7) 100%);
+      box-shadow: 0 0 15px rgba(255,255,255,0.5);
+    }
+
+    /* Status dots */
+    #status-area {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 2rem;
+      height: 24px;
+    }
+
+    .status-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .status-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
       text-transform: uppercase;
-      cursor: pointer;
-      transition: all 0.2s;
+      color: var(--muted);
     }
-    .rene-btn:hover { background: rgba(201,168,76,0.1); border-color: var(--gold); }
-    .rene-btn.primary { background: var(--gold); color: var(--dark); border-color: var(--gold); font-weight: 700; }
-    .rene-btn.primary:hover { background: var(--gold-light); }
-    .rene-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    /* ── RENE ALERT BANNER ── */
-    #rene-alert {
-      position: fixed; top: 1rem; left: 50%; transform: translateX(-50%);
-      background: rgba(10,10,10,0.95);
-      border: 1px solid rgba(201,168,76,0.4);
+    #status-area.speaking .status-dot {
+      opacity: 1;
+      animation: dot-blink 0.8s ease-in-out infinite alternate;
+    }
+    #status-area.speaking .status-dot:nth-child(2) { animation-delay: 0.2s; }
+    #status-area.speaking .status-dot:nth-child(3) { animation-delay: 0.4s; }
+    #status-area.speaking .status-label::after { content: "Speaking"; }
+
+    #status-area.listening .status-dot {
+      opacity: 1;
+      background: #6495ed;
+      animation: dot-blink 1s ease-in-out infinite alternate;
+    }
+    #status-area.listening .status-dot:nth-child(2) { animation-delay: 0.3s; }
+    #status-area.listening .status-dot:nth-child(3) { animation-delay: 0.6s; }
+    #status-area.listening .status-label::after { content: "Listening"; color: #6495ed; }
+
+    #status-area.idle .status-label::after { content: "Ready"; }
+    #status-area.connecting .status-label::after { content: "Connecting…"; }
+    #status-area.connecting .status-dot { opacity: 0.4; animation: dot-blink 1.5s ease-in-out infinite; }
+
+    @keyframes dot-blink {
+      from { opacity: 0.2; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* Transcript area */
+    #transcript-box {
+      max-width: 680px;
+      width: 100%;
+      margin-top: 2.8rem;
+      min-height: 120px;
+      max-height: 260px;
+      overflow-y: auto;
+      scrollbar-width: none;
+      padding: 0 1rem;
+      position: relative;
+    }
+    #transcript-box::-webkit-scrollbar { display: none; }
+
+    .transcript-line {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+      font-weight: 400;
+      line-height: 1.65;
+      text-align: center;
       color: var(--text);
-      padding: 0.8rem 1.8rem;
-      font-size: 0.82rem;
-      z-index: 99999;
-      display: none; align-items: center; gap: 0.8rem;
-      max-width: 90vw; box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+      opacity: 0;
+      animation: line-appear 0.6s ease forwards;
     }
-    #rene-alert .alert-icon { font-size: 1rem; }
-    #rene-alert.show { display: flex; }
 
-    /* ── KEYFRAMES ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
+    .transcript-line.user-line {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(0.8rem, 1.4vw, 1rem);
+      font-weight: 300;
+      color: var(--muted);
+      margin-top: 1rem;
+      font-style: italic;
+    }
+
+    @keyframes line-appear {
+      from { opacity: 0; transform: translateY(12px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    @keyframes fadeIn {
-      from { opacity: 0; } to { opacity: 1; }
-    }
-    @keyframes bounce {
-      0%, 100% { transform: translateX(-50%) translateY(0); }
-      50% { transform: translateX(-50%) translateY(-8px); }
-    }
-    @keyframes pulse-orb {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.4), 0 8px 30px rgba(201,168,76,0.2); }
-      50% { box-shadow: 0 0 0 14px rgba(201,168,76,0), 0 8px 30px rgba(201,168,76,0.3); }
-    }
-    @keyframes pulse-active {
-      0%, 100% { box-shadow: 0 0 0 6px rgba(201,168,76,0.25), 0 8px 40px rgba(201,168,76,0.4); }
-      50% { box-shadow: 0 0 0 14px rgba(201,168,76,0.1), 0 8px 40px rgba(201,168,76,0.5); }
-    }
-    @keyframes pulse-listen {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.06); }
-    }
-    @keyframes ripple {
-      0% { opacity: 0.6; transform: scale(1); }
-      100% { opacity: 0; transform: scale(1.5); }
-    }
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes blink {
-      0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+
+    /* Separator */
+    .gold-line {
+      width: 60px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 1.8rem auto 0;
+      opacity: 0.5;
     }
 
-    /* ── REVEAL ANIMATIONS ── */
-    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
-    .reveal-delay-4 { transition-delay: 0.4s; }
-    .reveal-delay-5 { transition-delay: 0.5s; }
-    .reveal-delay-6 { transition-delay: 0.6s; }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 1100px) {
-      #about { grid-template-columns: 1fr; padding: 8rem 5%; }
-      .about-visual { max-height: 400px; aspect-ratio: 16/7; }
-      .about-visual-badge { right: 2rem; }
-      .footer-grid { grid-template-columns: 1fr 1fr; }
+    /* Close button */
+    #close-btn {
+      position: absolute;
+      top: 2.2rem; right: 2.5rem;
+      background: none; border: none;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 1.1rem;
+      letter-spacing: 0.2em;
+      font-family: 'Inter', sans-serif;
+      font-weight: 200;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      transition: color 0.2s ease;
+      padding: 0.5rem;
     }
-    @media (max-width: 768px) {
-      nav { padding: 1.2rem 5%; }
-      .nav-links { display: none; }
-      .nav-hamburger { display: flex; }
-      section { padding: 5rem 5%; }
-      .consultation-form { grid-template-columns: 1fr; padding: 2rem; }
-      .form-group.full { grid-column: 1; }
-      #rene-modal { width: calc(100vw - 3rem); right: 1.5rem; bottom: 8rem; }
-      #rene-orb-container { bottom: 1.5rem; right: 1.5rem; }
-      .footer-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-      .about-stats { flex-wrap: wrap; gap: 2rem; }
+    #close-btn:hover { color: var(--gold); }
+
+    /* Microphone button */
+    #mic-btn {
+      margin-top: 2.5rem;
+      background: none;
+      border: 1px solid rgba(201,168,76,0.3);
+      color: var(--gold);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      padding: 0.75rem 2.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: none;
+    }
+    #mic-btn:hover { background: var(--gold-dim); border-color: var(--gold); }
+    #mic-btn.active { background: rgba(100,149,237,0.15); border-color: #6495ed; color: #6495ed; }
+
+    /* Error message */
+    #error-msg {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem;
+      color: #c97a7a;
+      letter-spacing: 0.1em;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    #error-msg.visible { opacity: 1; }
+
+    /* Ambient particles */
+    .particles {
+      position: fixed; inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+    .particle {
+      position: absolute;
+      width: 1px; height: 1px;
+      background: var(--gold);
+      border-radius: 50%;
+      opacity: 0;
+      animation: float-up linear infinite;
+    }
+
+    @keyframes float-up {
+      0% { opacity: 0; transform: translateY(0) scale(1); }
+      10% { opacity: 0.4; }
+      90% { opacity: 0.1; }
+      100% { opacity: 0; transform: translateY(-100vh) scale(0); }
+    }
+
+    /* ─── MOBILE ──────────────────────────────────── */
+    @media (max-width: 600px) {
+      #begin-btn { width: 140px; height: 140px; }
+      .hero-title { font-size: clamp(1.9rem, 8vw, 2.8rem); }
+      #live-orb { width: 90px; height: 90px; }
+      .orb-diamond-live { width: 22px; height: 22px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ── NAV ── -->
-  <nav id="main-nav">
-    <a href="#" class="nav-logo">House <span>of</span> Laurent</a>
-    <ul class="nav-links">
-      <li><a href="#services">Collections</a></li>
-      <li><a href="#about">Our Story</a></li>
-      <li><a href="#consultation" class="nav-cta">Private Consultation</a></li>
-    </ul>
-    <div class="nav-hamburger" onclick="toggleMenu()">
-      <span></span><span></span><span></span>
-    </div>
-  </nav>
+<!-- Ambient particles -->
+<div class="particles" id="particles"></div>
 
-  <!-- ── HERO ── -->
-  <section class="hero" id="home">
-    <div class="hero-bg"></div>
-    <div class="hero-lines"></div>
-    <div class="hero-content">
-      <p class="hero-eyebrow">Beverly Hills · Est. 1987</p>
-      <h1>House of <em>Laurent</em></h1>
-      <p class="hero-tagline">Where Timeless Elegance Meets Modern Experience</p>
-      <div class="hero-actions">
-        <a href="#consultation" class="btn-primary">Schedule a Consultation</a>
-        <a href="#services" class="btn-ghost">Explore Collections</a>
-      </div>
-    </div>
-    <div class="hero-scroll">Scroll</div>
-  </section>
+<!-- ─── HERO ─────────────────────────────────── -->
+<div id="hero">
+  <p class="hero-eyebrow">Private AI Client Command Interface™</p>
+  <h1 class="hero-title">Your Website Has a <em>Voice</em> Now</h1>
+  <p class="hero-subtitle">René — The Luxury Concierge Experience</p>
 
-  <!-- ── SERVICES ── -->
-  <section id="services">
-    <p class="section-eyebrow reveal">Our Collections</p>
-    <h2 class="section-title reveal reveal-delay-1">Crafted for <em style="font-style:italic;color:var(--gold)">Eternity</em></h2>
-    <div class="gold-line reveal reveal-delay-2"></div>
-    <p class="section-subtitle reveal reveal-delay-3">Each piece in our collection is a testament to the artistry passed down through generations — designed not merely to be worn, but to be treasured.</p>
-
-    <div class="services-grid">
-      <div class="service-card reveal reveal-delay-1">
-        <span class="service-number">01</span>
-        <span class="service-icon">💍</span>
-        <h3>Engagement Rings</h3>
-        <p>Begin your forever with a ring as extraordinary as your story. Our master craftsmen work with the world's finest diamonds and ethically sourced gemstones.</p>
-        <a href="#consultation" class="service-card-link">Explore →</a>
-      </div>
-      <div class="service-card reveal reveal-delay-2">
-        <span class="service-number">02</span>
-        <span class="service-icon">✨</span>
-        <h3>Fine Jewelry</h3>
-        <p>From whisper-thin pavé necklaces to statement cocktail rings — our curated collections span every occasion, every mood, every chapter of life.</p>
-        <a href="#consultation" class="service-card-link">Explore →</a>
-      </div>
-      <div class="service-card reveal reveal-delay-3">
-        <span class="service-number">03</span>
-        <span class="service-icon">🎨</span>
-        <h3>Custom Design</h3>
-        <p>Your vision, realized in precious metal and stone. Our design atelier transforms your most personal stories into one-of-a-kind wearable masterpieces.</p>
-        <a href="#consultation" class="service-card-link">Begin Design →</a>
-      </div>
-      <div class="service-card reveal reveal-delay-4">
-        <span class="service-number">04</span>
-        <span class="service-icon">🔧</span>
-        <h3>Restoration &amp; Repair</h3>
-        <p>Breathe new life into heirloom pieces. Our expert jewelers restore antique and estate jewelry to its original brilliance with reverence and precision.</p>
-        <a href="#consultation" class="service-card-link">Inquire →</a>
-      </div>
-      <div class="service-card reveal reveal-delay-5">
-        <span class="service-number">05</span>
-        <span class="service-icon">💎</span>
-        <h3>Private Collections</h3>
-        <p>By appointment only — access to one-of-a-kind estate pieces and rare gemstones never displayed publicly. The rarest for the most discerning.</p>
-        <a href="#consultation" class="service-card-link">Request Access →</a>
-      </div>
-      <div class="service-card reveal reveal-delay-6">
-        <span class="service-number">06</span>
-        <span class="service-icon">🎁</span>
-        <h3>Gift Consulting</h3>
-        <p>Our concierge team curates the perfect gift for every milestone — anniversaries, birthdays, celebrations. Complimentary luxury packaging included.</p>
-        <a href="#consultation" class="service-card-link">Consult →</a>
-      </div>
+  <button id="begin-btn" aria-label="Begin your experience with René">
+    <div class="orb-ring"></div>
+    <div class="orb-ring"></div>
+    <div class="orb-ring"></div>
+    <div class="orb-core">
+      <div class="orb-diamond"></div>
     </div>
-  </section>
+    <span class="orb-label">Begin Your Experience</span>
+  </button>
+</div>
 
-  <!-- ── ABOUT ── -->
-  <section id="about">
-    <div class="about-visual reveal">
-      <div class="about-visual-inner">
-        <div class="about-monogram">HL</div>
-      </div>
-      <div class="about-visual-badge">
-        <span class="badge-num">37</span>
-        <span class="badge-text">Years of Excellence</span>
-      </div>
-    </div>
-    <div class="about-content">
-      <p class="section-eyebrow reveal">Our Story</p>
-      <h2 class="section-title reveal reveal-delay-1">A Legacy Carved<br/>in <em style="font-style:italic;color:var(--gold)">Precious Stone</em></h2>
-      <div class="gold-line reveal reveal-delay-2"></div>
-      <p class="reveal reveal-delay-3">Founded in Beverly Hills in 1987 by master jeweler Henri Laurent, House of Laurent has spent nearly four decades defining what luxury jewelry truly means — not as adornment, but as legacy.</p>
-      <p class="reveal reveal-delay-3">We source only the finest ethically certified diamonds, working directly with select mining operations in Botswana and Canada. Every stone is hand-selected, every setting inspected under magnification before leaving our atelier.</p>
-      <p class="reveal reveal-delay-4">Today, House of Laurent serves a global clientele of discerning collectors, celebrities, and individuals who understand that the finest things in life are meant to endure.</p>
-      <div class="about-stats reveal reveal-delay-5">
-        <div class="about-stat">
-          <div class="stat-num">12K+</div>
-          <div class="stat-label">Pieces Created</div>
-        </div>
-        <div class="about-stat">
-          <div class="stat-num">4</div>
-          <div class="stat-label">Generations</div>
-        </div>
-        <div class="about-stat">
-          <div class="stat-num">100%</div>
-          <div class="stat-label">Ethical Sourcing</div>
-        </div>
-      </div>
-    </div>
-  </section>
+<!-- ─── CONVERSATION OVERLAY ──────────────────── -->
+<div id="overlay" role="dialog" aria-modal="true" aria-label="René conversation interface">
+  <div class="overlay-logo">René ✦ CWB</div>
+  <button id="close-btn" aria-label="End conversation">End Session</button>
 
-  <!-- ── CONSULTATION ── -->
-  <section id="consultation">
-    <div class="consultation-inner">
-      <p class="section-eyebrow reveal">Private Consultation</p>
-      <h2 class="section-title reveal reveal-delay-1">Begin Your<br/><em style="font-style:italic;color:var(--gold)">Journey</em></h2>
-      <div class="gold-line reveal reveal-delay-2"></div>
-      <p class="section-subtitle reveal reveal-delay-3">Every exceptional piece begins with a conversation. Reserve your private consultation at our Beverly Hills atelier — complimentary, unhurried, and entirely devoted to you.</p>
-
-      <form class="consultation-form reveal reveal-delay-4" onsubmit="handleFormSubmit(event)">
-        <div class="form-group">
-          <label for="fname">First Name</label>
-          <input type="text" id="fname" placeholder="First name" required />
-        </div>
-        <div class="form-group">
-          <label for="lname">Last Name</label>
-          <input type="text" id="lname" placeholder="Last name" required />
-        </div>
-        <div class="form-group">
-          <label for="email">Email Address</label>
-          <input type="email" id="email" placeholder="your@email.com" required />
-        </div>
-        <div class="form-group">
-          <label for="phone">Phone Number</label>
-          <input type="tel" id="phone" placeholder="+1 (310) 000-0000" />
-        </div>
-        <div class="form-group">
-          <label for="service">Service of Interest</label>
-          <select id="service">
-            <option value="">Select a service…</option>
-            <option>Engagement Ring</option>
-            <option>Fine Jewelry</option>
-            <option>Custom Design Commission</option>
-            <option>Restoration &amp; Repair</option>
-            <option>Private Collection Viewing</option>
-            <option>Gift Consulting</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="budget">Investment Range</label>
-          <select id="budget">
-            <option value="">Preferred range…</option>
-            <option>$5,000 – $15,000</option>
-            <option>$15,000 – $50,000</option>
-            <option>$50,000 – $150,000</option>
-            <option>$150,000+</option>
-            <option>Prefer to discuss privately</option>
-          </select>
-        </div>
-        <div class="form-group full">
-          <label for="message">Your Vision (Optional)</label>
-          <textarea id="message" placeholder="Tell us about the occasion, inspiration, or any special requirements…"></textarea>
-        </div>
-        <div class="form-submit">
-          <button type="submit" class="btn-primary">Request My Private Consultation</button>
-          <p style="color:var(--text-muted);font-size:0.75rem;margin-top:1rem;letter-spacing:0.1em;">All inquiries receive a response within 24 hours. Strictly confidential.</p>
-        </div>
-      </form>
-    </div>
-  </section>
-
-  <!-- ── FOOTER ── -->
-  <footer>
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <a href="#" class="nav-logo">House <span>of</span> Laurent</a>
-        <p>Beverly Hills' premier destination for exceptional fine jewelry since 1987. Where each piece carries the weight of a lifetime.</p>
-      </div>
-      <div class="footer-col">
-        <h4>Collections</h4>
-        <ul>
-          <li><a href="#services">Engagement Rings</a></li>
-          <li><a href="#services">Fine Jewelry</a></li>
-          <li><a href="#services">Custom Design</a></li>
-          <li><a href="#services">Private Collections</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Visit</h4>
-        <ul>
-          <li><a href="#">Beverly Hills Atelier</a></li>
-          <li><a href="#">By Appointment</a></li>
-          <li><a href="#">Mon–Sat, 10am–6pm</a></li>
-          <li><a href="#">+1 (310) 555-0100</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Company</h4>
-        <ul>
-          <li><a href="#about">Our Story</a></li>
-          <li><a href="#">Press &amp; Media</a></li>
-          <li><a href="#">Care Guide</a></li>
-          <li><a href="#consultation">Contact</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© 2024 House of Laurent. All rights reserved.</span>
-      <span>
-        <a href="#">Privacy Policy</a> &nbsp;·&nbsp;
-        <a href="#">Terms</a> &nbsp;·&nbsp;
-        <a href="#">Ethical Sourcing</a>
-      </span>
-    </div>
-  </footer>
-
-  <!-- ── RENE ALERT ── -->
-  <div id="rene-alert">
-    <span class="alert-icon">⚠️</span>
-    <span id="rene-alert-text"></span>
+  <div id="live-orb">
+    <div class="orb-diamond-live"></div>
   </div>
 
-  <!-- ── RENE ORB ── -->
-  <div id="rene-orb-container">
-    <div class="rene-tooltip"><strong>René</strong> — Ask me anything ✦</div>
-    <div id="rene-orb" onclick="toggleRene()" title="Talk to René">
-      <div class="rene-orb-name">René</div>
-      <div class="rene-orb-label">Talk to me</div>
-    </div>
+  <div id="status-area" class="connecting" aria-live="polite">
+    <div class="status-dot"></div>
+    <div class="status-dot"></div>
+    <div class="status-dot"></div>
+    <span class="status-label"></span>
   </div>
 
-  <!-- ── RENE MODAL ── -->
-  <div id="rene-modal">
-    <div class="rene-modal-header">
-      <div class="rene-avatar">R</div>
-      <div class="rene-modal-title">
-        <h3>René</h3>
-        <p>✦ House of Laurent Concierge</p>
-      </div>
-      <button class="rene-modal-close" onclick="closeRene()">✕</button>
-    </div>
+  <button id="mic-btn" aria-label="Speak to René">Hold to Speak</button>
 
-    <div class="rene-transcript" id="rene-transcript"></div>
+  <div class="gold-line"></div>
 
-    <div class="rene-status-bar">
-      <div class="rene-status-dot idle" id="rene-dot"></div>
-      <span id="rene-status-text">Click "Speak" to begin</span>
-    </div>
+  <div id="transcript-box" aria-live="polite" aria-label="Conversation transcript"></div>
 
-    <div class="rene-controls">
-      <button class="rene-btn primary" id="rene-speak-btn" onclick="startListening()">🎙 Speak</button>
-      <button class="rene-btn" id="rene-stop-btn" onclick="stopAll()" disabled>⏹ Stop</button>
-    </div>
-  </div>
+  <p id="error-msg"></p>
+</div>
 
-  <!-- ── SCRIPTS ── -->
-  <script>
-    // ── NAV SCROLL EFFECT ──
-    const nav = document.getElementById('main-nav');
-    window.addEventListener('scroll', () => {
-      nav.classList.toggle('scrolled', window.scrollY > 60);
+<script>
+// ═══════════════════════════════════════════════════════════════════
+//  CONFIGURATION
+// ═══════════════════════════════════════════════════════════════════
+const GEMINI_API_KEY = "AIzaSyC_ECkMFz2JmYwjp1bgIv0mqXJExT0gAu8";
+const GEMINI_REST_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+const GEMINI_WS_URL   = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=${GEMINI_API_KEY}`;
+
+const RENE_SYSTEM_PROMPT = `You are René — a sophisticated AI concierge for a luxury jewelry experience. Your role is to guide business owners through a live demonstration of what their future "Private AI Client Command Interface" will look and feel like for their clients.
+
+OPENING (say this first, exactly):
+"Welcome. You've just entered a space where your visitors no longer click around. They speak to your website — and your website speaks back. I'm René, and I'll be curating your experience today. So happy that you could join for this live demonstration. How are you?"
+
+AFTER THEY RESPOND — deliver this:
+"I'd like to take a quick moment to put into perspective exactly what's going on here. How many times have you searched a business online, arrived at their site — only to discover that not only can you speak to the website, but the website actually speaks back — with the ability to explain every single granular detail about the company, the products it sells, and the specific methods the company employs to sell them. And that's not even the best part. Just checking in — did that make sense so far?"
+
+AFTER CONFIRMATION — continue:
+"Your luxury private client concierge allows you to transform your outdated static website — which is essentially a functionless digital billboard — into the elevated experience befitting the refined sensibilities of a clientele such as yours. This is the literal voice of your brand. From this day forward, its reach will never again be limited by shop hours, on-site visits, availability of associates, employee temperament, or language barriers — 24 hours a day, 7 days a week. This means every serious inquiry is immediately addressed exactly the way you've carefully arranged for them to be handled in your presence. Does that resonate with how you'd like your brand represented?"
+
+THE FOOT TRAFFIC ANALOGY (after their yes):
+"Wonderful. Let me reframe this for you. Right now, your paid ads drive traffic to a website where your visitors are essentially left to their own devices — never properly informed the way they are by on-site associates. Humor me for a moment: Would you actually pay for ads to drive foot traffic to your physical location, ensuring only serious parties were in attendance — and then, when they arrived, leave them to wander around your shop totally unattended and completely ignored by your associates? Would you ever do that?"
+
+AFTER THEY SAY NEVER:
+"Exactly. And would you have the ads request they show up only when your shop doors were open, with no associates to attend them? Of course not. Your house does not conduct business that way on-site — and that is not how it should be represented to the world online. Online traffic works exactly the same as foot traffic. Now your luxury private client concierge, in the signature voice of your brand, can curate your entire customer journey end to end — from first point of contact, to qualifying serious buyers, to autonomously scheduling private showings, right through to nurture campaigns designed to identify and facilitate bespoke opportunities. Now that I've shown you what we can do for your house — will you allow me to briefly show you exactly how we do it?"
+
+AFTER THEY AGREE — collect info:
+"Perfect. This next portion requires just a little participation from you. I'll need a few details. What is your first name?"
+[collect name]
+"Wonderful, [name]. And what is the name of your business?"
+[collect business name]
+"Beautiful. To make this demonstration as relevant as possible, I'll need a few high-level figures. On an average day, approximately how many serious walk-in clients do you see?"
+[collect number]
+"And what would you say is the average sale value for those serious walk-in clients?"
+[collect value]
+"Perfect. And for a private client — what does that sale typically look like?"
+[collect private client value]
+
+CLOSING — after collecting info:
+"[Name], based on everything you've experienced today — can you see a concierge like this qualifying even one serious buyer per week? Setting one private showing? Facilitating one bespoke appointment? Because at [their stated average], that's not a feature. That's infrastructure. This is the literal voice of your brand — available 24 hours a day, in every language, on every device, to every visitor who arrives at your door. When you're ready to move forward, your concierge will be here. Thank you for your time today."
+
+PERSONALITY RULES:
+- Elegant, warm, never pushy
+- Pacing: slow and deliberate, like a luxury hotel concierge
+- Short responses in early stages, build to longer as rapport develops
+- Always confirm understanding before moving forward
+- Never break character
+- Keep responses conversational and appropriately sized for voice
+- Do not use markdown, bullet points, or special formatting — speak naturally`;
+
+// ═══════════════════════════════════════════════════════════════════
+//  AMBIENT PARTICLES
+// ═══════════════════════════════════════════════════════════════════
+(function spawnParticles() {
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 22; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = `
+      left: ${Math.random() * 100}%;
+      bottom: ${Math.random() * 20}%;
+      animation-duration: ${12 + Math.random() * 20}s;
+      animation-delay: ${Math.random() * 15}s;
+      width: ${Math.random() < 0.3 ? 2 : 1}px;
+      height: ${Math.random() < 0.3 ? 2 : 1}px;
+    `;
+    container.appendChild(p);
+  }
+})();
+
+// ═══════════════════════════════════════════════════════════════════
+//  DOM REFS
+// ═══════════════════════════════════════════════════════════════════
+const hero        = document.getElementById('hero');
+const overlay     = document.getElementById('overlay');
+const beginBtn    = document.getElementById('begin-btn');
+const closeBtn    = document.getElementById('close-btn');
+const liveOrb     = document.getElementById('live-orb');
+const statusArea  = document.getElementById('status-area');
+const statusLabel = statusArea.querySelector('.status-label');
+const transcriptBox = document.getElementById('transcript-box');
+const micBtn      = document.getElementById('mic-btn');
+const errorMsg    = document.getElementById('error-msg');
+
+// ═══════════════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════════════
+let conversationHistory = [];
+let isSpeaking   = false;
+let isListening  = false;
+let currentUtterance = null;
+let recognition  = null;
+let recognitionActive = false;
+let wsConn       = null;
+let audioContext = null;
+let audioQueue   = [];
+let isPlayingAudio = false;
+let useWebSocket = false; // will be determined at init
+let sessionStarted = false;
+
+// ═══════════════════════════════════════════════════════════════════
+//  UI HELPERS
+// ═══════════════════════════════════════════════════════════════════
+function setStatus(state) {
+  statusArea.className = state;
+  // label text is set via CSS ::after, but we also set aria
+  const labels = { speaking: 'Speaking', listening: 'Listening', idle: 'Ready', connecting: 'Connecting' };
+  statusArea.setAttribute('aria-label', labels[state] || state);
+  liveOrb.className = state === 'speaking' ? 'speaking' : (state === 'listening' ? 'listening' : '');
+}
+
+function showError(msg) {
+  errorMsg.textContent = msg;
+  errorMsg.classList.add('visible');
+  setTimeout(() => errorMsg.classList.remove('visible'), 5000);
+}
+
+function appendTranscript(text, isUser = false) {
+  const line = document.createElement('p');
+  line.className = 'transcript-line' + (isUser ? ' user-line' : '');
+  line.textContent = isUser ? `"${text}"` : text;
+  transcriptBox.appendChild(line);
+  transcriptBox.scrollTop = transcriptBox.scrollHeight;
+}
+
+function clearTranscript() {
+  transcriptBox.innerHTML = '';
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  GEMINI REST API — Text response → speak with Web Speech
+// ═══════════════════════════════════════════════════════════════════
+async function callGeminiREST(userMessage) {
+  // Build history
+  conversationHistory.push({ role: 'user', parts: [{ text: userMessage }] });
+
+  const body = {
+    system_instruction: { parts: [{ text: RENE_SYSTEM_PROMPT }] },
+    contents: conversationHistory,
+    generationConfig: {
+      temperature: 0.85,
+      maxOutputTokens: 512,
+    }
+  };
+
+  try {
+    const res = await fetch(GEMINI_REST_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
     });
 
-    // ── HAMBURGER ──
-    function toggleMenu() {
-      const links = document.querySelector('.nav-links');
-      links.style.display = links.style.display === 'flex' ? 'none' : 'flex';
-      links.style.flexDirection = 'column';
-      links.style.position = 'absolute';
-      links.style.top = '70px'; links.style.right = '5%';
-      links.style.background = 'rgba(10,10,10,0.98)';
-      links.style.padding = '1.5rem 2rem';
-      links.style.border = '1px solid rgba(201,168,76,0.2)';
-      links.style.zIndex = '200';
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData?.error?.message || `HTTP ${res.status}`);
     }
 
-    // ── REVEAL ON SCROLL ──
-    const reveals = document.querySelectorAll('.reveal');
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
-    }, { threshold: 0.12 });
-    reveals.forEach(r => io.observe(r));
+    const data = await res.json();
+    const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
-    // ── FORM SUBMIT ──
-    function handleFormSubmit(e) {
-      e.preventDefault();
-      const btn = e.target.querySelector('button[type=submit]');
-      btn.textContent = '✓ Consultation Requested';
-      btn.style.background = '#2a6640';
-      btn.style.color = '#fff';
-      btn.disabled = true;
-      setTimeout(() => { addReneBubble("I've received your consultation request. One of our team members will reach out to you within 24 hours. We look forward to welcoming you to House of Laurent. ✦"); openRene(); }, 800);
-    }
+    if (!reply) throw new Error('Empty response from Gemini');
 
-    // ── RENE AI VOICE AGENT ──
-    const GEMINI_API_KEY = "AIzaSyC_ECkMFz2JmYwjp1bgIv0mqXJExT0gAu8";
-    const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    conversationHistory.push({ role: 'model', parts: [{ text: reply }] });
+    return reply;
 
-    const RENE_SYSTEM_PROMPT = `You are René, the sophisticated AI concierge for House of Laurent, a premier luxury jewelry boutique. Welcome visitors warmly, answer questions about collections (engagement rings, fine jewelry, custom design, repairs), and guide them toward scheduling a private consultation. Personality: elegant, warm, knowledgeable. When someone shows interest, ask for their name to arrange a consultation. Only discuss House of Laurent. Business hours: Mon-Sat 10am-6pm. Location: Beverly Hills area. Keep responses concise (2-3 sentences max) for voice delivery.`;
+  } catch (err) {
+    throw err;
+  }
+}
 
-    let recognition = null;
-    let synthesis = window.speechSynthesis;
-    let conversationHistory = [];
-    let isListening = false;
-    let isSpeaking = false;
-    let reneOpen = false;
+// ═══════════════════════════════════════════════════════════════════
+//  WEB SPEECH SYNTHESIS — René's voice
+// ═══════════════════════════════════════════════════════════════════
+function pickVoice() {
+  const voices = window.speechSynthesis.getVoices();
+  // Prefer a premium female English voice
+  const preferred = [
+    'Samantha', 'Karen', 'Moira', 'Tessa', 'Victoria',
+    'Microsoft Aria Online (Natural) - English (United States)',
+    'Google UK English Female', 'Google US English',
+    'en-US', 'en-GB'
+  ];
+  for (const name of preferred) {
+    const v = voices.find(v => v.name.includes(name) || v.lang.startsWith(name));
+    if (v) return v;
+  }
+  return voices.find(v => v.lang.startsWith('en')) || voices[0] || null;
+}
 
-    // ── RENE MODAL TOGGLE ──
-    function openRene() {
-      const modal = document.getElementById('rene-modal');
-      modal.classList.add('open');
-      document.getElementById('rene-orb').classList.add('active');
-      reneOpen = true;
-      if (conversationHistory.length === 0) {
-        setTimeout(() => greetVisitor(), 400);
-      }
-    }
-    function closeRene() {
-      document.getElementById('rene-modal').classList.remove('open');
-      document.getElementById('rene-orb').classList.remove('active');
-      stopAll();
-      reneOpen = false;
-    }
-    function toggleRene() { reneOpen ? closeRene() : openRene(); }
+function speakText(text) {
+  return new Promise((resolve) => {
+    window.speechSynthesis.cancel();
+    setStatus('speaking');
 
-    // ── GREETING ──
-    async function greetVisitor() {
-      const greeting = "Good day, and welcome to House of Laurent. I'm René, your personal concierge. Whether you're seeking an engagement ring, a custom creation, or simply exploring our collections — I'm here to guide you. How may I assist you today?";
-      addReneBubble(greeting);
-      await speak(greeting);
-    }
+    const utter = new SpeechSynthesisUtterance(text);
+    currentUtterance = utter;
 
-    // ── ADD BUBBLES ──
-    function addReneBubble(text) {
-      const t = document.getElementById('rene-transcript');
-      const b = document.createElement('div');
-      b.className = 'rene-bubble rene';
-      b.textContent = text;
-      t.appendChild(b);
-      t.scrollTop = t.scrollHeight;
-      conversationHistory.push({ role: 'model', parts: [{ text }] });
-    }
-    function addUserBubble(text) {
-      const t = document.getElementById('rene-transcript');
-      const b = document.createElement('div');
-      b.className = 'rene-bubble user';
-      b.textContent = text;
-      t.appendChild(b);
-      t.scrollTop = t.scrollHeight;
-      conversationHistory.push({ role: 'user', parts: [{ text }] });
-    }
+    // Wait for voices to load
+    const setVoiceAndSpeak = () => {
+      utter.voice = pickVoice();
+      utter.rate  = 0.88;  // slightly slow — luxury pacing
+      utter.pitch = 1.0;
+      utter.volume = 1.0;
 
-    // ── STATUS ──
-    function setStatus(text, type) {
-      document.getElementById('rene-status-text').textContent = text;
-      const dot = document.getElementById('rene-dot');
-      dot.className = 'rene-status-dot ' + (type || 'idle');
-    }
+      appendTranscript(text, false);
 
-    // ── SHOW ALERT ──
-    function showAlert(msg) {
-      const a = document.getElementById('rene-alert');
-      document.getElementById('rene-alert-text').textContent = msg;
-      a.classList.add('show');
-      setTimeout(() => a.classList.remove('show'), 5000);
-    }
-
-    // ── SPEAK RESPONSE ──
-    function speak(text) {
-      return new Promise((resolve) => {
-        if (!synthesis) { resolve(); return; }
-        synthesis.cancel();
-        const utt = new SpeechSynthesisUtterance(text);
-        utt.rate = 0.92;
-        utt.pitch = 1.0;
-        utt.volume = 1.0;
-
-        // Pick a pleasant voice
-        const voices = synthesis.getVoices();
-        const preferred = voices.find(v =>
-          v.name.includes('Samantha') ||
-          v.name.includes('Karen') ||
-          v.name.includes('Victoria') ||
-          v.name.includes('Moira') ||
-          v.name.toLowerCase().includes('female') ||
-          v.name.includes('Google UK English Female') ||
-          v.name.includes('Fiona')
-        ) || voices.find(v => v.lang === 'en-US') || voices[0];
-        if (preferred) utt.voice = preferred;
-
-        isSpeaking = true;
-        setStatus('René is speaking…', 'speaking');
-        document.getElementById('rene-orb').classList.add('active');
-        document.getElementById('rene-stop-btn').disabled = false;
-
-        utt.onend = () => {
-          isSpeaking = false;
-          setStatus('Click "Speak" to continue', 'idle');
-          document.getElementById('rene-orb').classList.remove('listening');
-          resolve();
-        };
-        utt.onerror = () => { isSpeaking = false; resolve(); };
-        synthesis.speak(utt);
-      });
-    }
-
-    // ── GEMINI API CALL ──
-    async function askGemini(userMessage) {
-      try {
-        const messages = conversationHistory.slice(-10); // keep context window reasonable
-        const body = {
-          system_instruction: { parts: [{ text: RENE_SYSTEM_PROMPT }] },
-          contents: messages
-        };
-
-        const resp = await fetch(GEMINI_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
-        });
-
-        if (!resp.ok) {
-          const err = await resp.json().catch(() => ({}));
-          throw new Error(err?.error?.message || `HTTP ${resp.status}`);
+      utter.onend = () => {
+        setStatus('idle');
+        resolve();
+      };
+      utter.onerror = (e) => {
+        if (e.error !== 'interrupted') {
+          setStatus('idle');
         }
-
-        const data = await resp.json();
-        const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (!reply) throw new Error('Empty response from René');
-        return reply;
-      } catch (err) {
-        console.error('Gemini error:', err);
-        return "I do apologize — I'm having a brief moment of reflection. Please allow me a moment and try again, or feel free to reach us directly at our atelier.";
-      }
-    }
-
-    // ── START LISTENING ──
-    function startListening() {
-      if (isSpeaking) { synthesis.cancel(); isSpeaking = false; }
-
-      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRec) {
-        showAlert('Voice input requires a supported browser (Chrome recommended). Please type your question below.');
-        setStatus('Browser not supported — use Chrome', 'idle');
-        return;
-      }
-
-      if (isListening && recognition) { recognition.stop(); return; }
-
-      recognition = new SpeechRec();
-      recognition.lang = 'en-US';
-      recognition.interimResults = false;
-      recognition.maxAlternatives = 1;
-      recognition.continuous = false;
-
-      isListening = true;
-      setStatus('Listening… speak now', 'listening');
-      document.getElementById('rene-orb').classList.add('listening');
-      document.getElementById('rene-speak-btn').textContent = '🔴 Listening…';
-      document.getElementById('rene-speak-btn').disabled = true;
-      document.getElementById('rene-stop-btn').disabled = false;
-
-      recognition.onresult = async (event) => {
-        const transcript = event.results[0][0].transcript;
-        isListening = false;
-        document.getElementById('rene-speak-btn').textContent = '🎙 Speak';
-        document.getElementById('rene-speak-btn').disabled = false;
-        document.getElementById('rene-orb').classList.remove('listening');
-
-        if (!transcript.trim()) { setStatus('Didn\'t catch that — try again', 'idle'); return; }
-
-        addUserBubble(transcript);
-        setStatus('René is thinking…', 'thinking');
-
-        const reply = await askGemini(transcript);
-        addReneBubble(reply);
-        await speak(reply);
+        resolve();
       };
 
-      recognition.onerror = (event) => {
-        isListening = false;
-        document.getElementById('rene-speak-btn').textContent = '🎙 Speak';
-        document.getElementById('rene-speak-btn').disabled = false;
-        document.getElementById('rene-orb').classList.remove('listening');
+      window.speechSynthesis.speak(utter);
+    };
 
-        if (event.error === 'not-allowed') {
-          setStatus('Microphone access denied', 'idle');
-          showAlert('Please allow microphone access in your browser to talk with René.');
-        } else if (event.error === 'no-speech') {
-          setStatus('No speech detected — try again', 'idle');
-        } else {
-          setStatus('Voice error — please retry', 'idle');
-        }
-      };
+    if (window.speechSynthesis.getVoices().length > 0) {
+      setVoiceAndSpeak();
+    } else {
+      window.speechSynthesis.onvoiceschanged = setVoiceAndSpeak;
+    }
+  });
+}
 
-      recognition.onend = () => {
-        isListening = false;
-        if (document.getElementById('rene-speak-btn').textContent.includes('Listening')) {
-          document.getElementById('rene-speak-btn').textContent = '🎙 Speak';
-          document.getElementById('rene-speak-btn').disabled = false;
-        }
-      };
+// ═══════════════════════════════════════════════════════════════════
+//  WEB SPEECH RECOGNITION — Listen for user
+// ═══════════════════════════════════════════════════════════════════
+function setupSpeechRecognition() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) return false;
 
+  recognition = new SpeechRecognition();
+  recognition.continuous      = false;
+  recognition.interimResults  = false;
+  recognition.lang            = 'en-US';
+  recognition.maxAlternatives = 1;
+
+  return true;
+}
+
+function listenForUser() {
+  return new Promise((resolve, reject) => {
+    if (!recognition) {
+      reject(new Error('Speech recognition not available'));
+      return;
+    }
+
+    setStatus('listening');
+    recognitionActive = true;
+
+    recognition.onresult = (e) => {
+      const transcript = e.results[0][0].transcript.trim();
+      recognitionActive = false;
+      resolve(transcript);
+    };
+
+    recognition.onerror = (e) => {
+      recognitionActive = false;
+      if (e.error === 'no-speech') {
+        resolve(''); // User was silent
+      } else {
+        reject(new Error(e.error));
+      }
+    };
+
+    recognition.onend = () => {
+      recognitionActive = false;
+      // If no result fired, resolve with empty
+    };
+
+    try {
       recognition.start();
+    } catch (e) {
+      recognitionActive = false;
+      reject(e);
     }
+  });
+}
 
-    // ── STOP ALL ──
-    function stopAll() {
-      if (recognition) { try { recognition.abort(); } catch(e) {} }
-      if (synthesis) synthesis.cancel();
-      isListening = false;
-      isSpeaking = false;
-      setStatus('Stopped — click Speak to continue', 'idle');
-      document.getElementById('rene-speak-btn').textContent = '🎙 Speak';
-      document.getElementById('rene-speak-btn').disabled = false;
-      document.getElementById('rene-stop-btn').disabled = true;
-      document.getElementById('rene-orb').classList.remove('listening');
-    }
-
-    // ── LOAD VOICES WHEN READY ──
-    if (synthesis) {
-      synthesis.onvoiceschanged = () => synthesis.getVoices();
-      synthesis.getVoices(); // trigger initial load
-    }
-
-    // ── CLOSE MODAL ON OUTSIDE CLICK ──
-    document.addEventListener('click', (e) => {
-      const modal = document.getElementById('rene-modal');
-      const orb = document.getElementById('rene-orb-container');
-      if (reneOpen && !modal.contains(e.target) && !orb.contains(e.target)) {
-        // Don't close — better UX to keep open
+// ═══════════════════════════════════════════════════════════════════
+//  GEMINI LIVE WEBSOCKET — Attempt
+// ═══════════════════════════════════════════════════════════════════
+function tryGeminiLiveWebSocket() {
+  return new Promise((resolve) => {
+    // Short timeout to test if WS connects at all
+    let resolved = false;
+    const timeout = setTimeout(() => {
+      if (!resolved) {
+        resolved = true;
+        resolve(false);
       }
-    });
-  </script>
+    }, 4000);
+
+    try {
+      const ws = new WebSocket(GEMINI_WS_URL);
+
+      ws.onopen = () => {
+        // Send setup
+        ws.send(JSON.stringify({
+          setup: {
+            model: "models/gemini-2.0-flash-live-001",
+            generation_config: {
+              response_modalities: ["AUDIO"],
+              speech_config: { voice_config: { prebuilt_voice_config: { voice_name: "Aoede" } } }
+            },
+            system_instruction: { parts: [{ text: RENE_SYSTEM_PROMPT }] }
+          }
+        }));
+      };
+
+      ws.onmessage = (event) => {
+        try {
+          const msg = JSON.parse(event.data);
+          if (msg.setupComplete !== undefined) {
+            clearTimeout(timeout);
+            if (!resolved) {
+              resolved = true;
+              wsConn = ws;
+              resolve(true);
+            }
+          }
+        } catch (e) {}
+      };
+
+      ws.onerror = () => {
+        clearTimeout(timeout);
+        if (!resolved) {
+          resolved = true;
+          resolve(false);
+        }
+      };
+
+      ws.onclose = (e) => {
+        if (wsConn === ws) wsConn = null;
+        clearTimeout(timeout);
+        if (!resolved) {
+          resolved = true;
+          resolve(false);
+        }
+      };
+    } catch (e) {
+      clearTimeout(timeout);
+      if (!resolved) {
+        resolved = true;
+        resolve(false);
+      }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  WEBSOCKET AUDIO — PCM capture & playback
+// ═══════════════════════════════════════════════════════════════════
+let mediaStream = null;
+let scriptProcessor = null;
+
+async function initAudioCapture() {
+  audioContext = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
+  mediaStream  = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, sampleRate: 16000 }, video: false });
+
+  const source = audioContext.createMediaStreamSource(mediaStream);
+  scriptProcessor = audioContext.createScriptProcessor(2048, 1, 1);
+
+  scriptProcessor.onaudioprocess = (e) => {
+    if (!isListening || !wsConn) return;
+    const float32 = e.inputBuffer.getChannelData(0);
+    const int16   = new Int16Array(float32.length);
+    for (let i = 0; i < float32.length; i++) {
+      int16[i] = Math.max(-32768, Math.min(32767, float32[i] * 32768));
+    }
+    const bytes  = new Uint8Array(int16.buffer);
+    const base64 = btoa(String.fromCharCode(...bytes));
+    wsConn.send(JSON.stringify({
+      realtimeInput: { mediaChunks: [{ data: base64, mimeType: 'audio/pcm;rate=16000' }] }
+    }));
+  };
+
+  source.connect(scriptProcessor);
+  scriptProcessor.connect(audioContext.destination);
+}
+
+async function playPCMChunk(base64Data, sampleRate = 24000) {
+  if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+  const bytes   = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
+  const int16   = new Int16Array(bytes.buffer);
+  const float32 = new Float32Array(int16.length);
+  for (let i = 0; i < int16.length; i++) float32[i] = int16[i] / 32768;
+
+  const buffer = audioContext.createBuffer(1, float32.length, sampleRate);
+  buffer.getChannelData(0).set(float32);
+
+  const source = audioContext.createBufferSource();
+  source.buffer = buffer;
+  source.connect(audioContext.destination);
+  source.start();
+
+  return new Promise(resolve => { source.onended = resolve; });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  WEBSOCKET CONVERSATION LOOP
+// ═══════════════════════════════════════════════════════════════════
+async function runWebSocketConversation(firstTurn = true) {
+  if (!wsConn) return;
+
+  wsConn.onmessage = async (event) => {
+    try {
+      const msg = JSON.parse(event.data);
+
+      // Handle audio response
+      if (msg.serverContent?.modelTurn?.parts) {
+        for (const part of msg.serverContent.modelTurn.parts) {
+          if (part.inlineData?.mimeType?.startsWith('audio/pcm')) {
+            setStatus('speaking');
+            await playPCMChunk(part.inlineData.data, 24000);
+          }
+          if (part.text) {
+            appendTranscript(part.text);
+          }
+        }
+      }
+
+      // Turn complete — now listen for user
+      if (msg.serverContent?.turnComplete) {
+        setStatus('idle');
+        // Short pause then listen
+        await new Promise(r => setTimeout(r, 600));
+        await startListeningWS();
+      }
+
+    } catch (e) {}
+  };
+
+  if (firstTurn) {
+    // Trigger René's opening line via text turn
+    wsConn.send(JSON.stringify({
+      clientContent: {
+        turns: [{ role: 'user', parts: [{ text: 'Begin — say your opening line now.' }] }],
+        turnComplete: true
+      }
+    }));
+  }
+}
+
+async function startListeningWS() {
+  setStatus('listening');
+  isListening = true;
+
+  // For WS mode, we stream audio and send turn_complete when done
+  // User clicks mic button to stop
+  micBtn.style.display = 'block';
+  micBtn.classList.add('active');
+  micBtn.textContent = 'Listening… (tap to stop)';
+
+  micBtn.onclick = async () => {
+    isListening = false;
+    micBtn.classList.remove('active');
+    micBtn.style.display = 'none';
+    setStatus('speaking');
+    if (wsConn) {
+      wsConn.send(JSON.stringify({ clientContent: { turnComplete: true } }));
+    }
+  };
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  REST CONVERSATION LOOP (primary reliable path)
+// ═══════════════════════════════════════════════════════════════════
+async function runConversation() {
+  if (sessionStarted) return;
+  sessionStarted = true;
+
+  const hasSpeechRecognition = setupSpeechRecognition();
+
+  // ── OPENING: René speaks first ──────────────────
+  try {
+    setStatus('connecting');
+    const opening = await callGeminiREST('BEGIN_SESSION_OPENING');
+    setStatus('speaking');
+    await speakText(opening);
+  } catch (err) {
+    showError('Could not connect to René. Please check your connection.');
+    setStatus('idle');
+    return;
+  }
+
+  // ── CONVERSATION LOOP ───────────────────────────
+  while (true) {
+    setStatus('idle');
+    await new Promise(r => setTimeout(r, 400));
+
+    let userInput = '';
+
+    if (hasSpeechRecognition) {
+      // Show mic button for manual control
+      micBtn.textContent = 'Tap to Speak';
+      micBtn.style.display = 'block';
+      micBtn.classList.remove('active');
+
+      userInput = await new Promise((resolve) => {
+        micBtn.onclick = async () => {
+          micBtn.style.display = 'none';
+          try {
+            setStatus('listening');
+            const text = await listenForUser();
+            setStatus('idle');
+            resolve(text);
+          } catch (e) {
+            setStatus('idle');
+            resolve('');
+          }
+        };
+      });
+
+    } else {
+      // Fallback: text input prompt
+      userInput = await promptTextInput();
+    }
+
+    if (!userInput || userInput.trim() === '') {
+      // Re-prompt gently
+      continue;
+    }
+
+    // Show user's words
+    appendTranscript(userInput, true);
+    micBtn.style.display = 'none';
+
+    // Get René's response
+    try {
+      setStatus('connecting');
+      const reply = await callGeminiREST(userInput);
+      setStatus('speaking');
+      await speakText(reply);
+    } catch (err) {
+      showError('Connection interrupted — please try again.');
+      setStatus('idle');
+    }
+  }
+}
+
+// Text input fallback for browsers without speech recognition
+function promptTextInput() {
+  return new Promise((resolve) => {
+    // Create a minimal input overlay
+    const inputWrapper = document.createElement('div');
+    inputWrapper.style.cssText = `
+      display:flex; gap:0.8rem; align-items:center;
+      margin-top: 1.5rem; max-width: 500px; width: 100%;
+    `;
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = 'Type your response…';
+    input.style.cssText = `
+      flex:1; background:transparent; border:none; border-bottom:1px solid rgba(201,168,76,0.4);
+      color:#f0ece4; font-family:'Inter',sans-serif; font-size:0.9rem; font-weight:300;
+      padding:0.6rem 0; outline:none; letter-spacing:0.05em;
+    `;
+
+    const sendBtn = document.createElement('button');
+    sendBtn.textContent = '→';
+    sendBtn.style.cssText = `
+      background:none; border:none; color:#c9a84c; font-size:1.4rem; cursor:pointer; padding:0 0.4rem;
+    `;
+
+    const submit = () => {
+      const val = input.value.trim();
+      inputWrapper.remove();
+      resolve(val);
+    };
+
+    sendBtn.onclick = submit;
+    input.onkeydown = (e) => { if (e.key === 'Enter') submit(); };
+
+    inputWrapper.appendChild(input);
+    inputWrapper.appendChild(sendBtn);
+    transcriptBox.after(inputWrapper);
+    input.focus();
+
+    setStatus('idle');
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  SESSION INIT
+// ═══════════════════════════════════════════════════════════════════
+async function startSession() {
+  hero.classList.add('fade-out');
+  setTimeout(() => { hero.style.display = 'none'; }, 800);
+
+  overlay.classList.add('visible');
+  setStatus('connecting');
+  clearTranscript();
+  conversationHistory = [];
+  sessionStarted = false;
+
+  // Brief pause for overlay to appear
+  await new Promise(r => setTimeout(r, 600));
+
+  // Attempt Gemini Live WebSocket first
+  console.log('[René] Attempting Gemini Live WebSocket…');
+  const wsOk = await tryGeminiLiveWebSocket();
+
+  if (wsOk) {
+    console.log('[René] WebSocket connected — using live streaming');
+    useWebSocket = true;
+    try {
+      await initAudioCapture();
+      await runWebSocketConversation(true);
+    } catch (e) {
+      console.warn('[René] WebSocket audio failed, falling back to REST:', e);
+      useWebSocket = false;
+      runConversation();
+    }
+  } else {
+    console.log('[René] WebSocket unavailable — using REST + Web Speech');
+    useWebSocket = false;
+    runConversation();
+  }
+}
+
+function endSession() {
+  // Stop speech
+  window.speechSynthesis.cancel();
+  if (recognition) { try { recognition.abort(); } catch(e) {} }
+  if (wsConn) { try { wsConn.close(); } catch(e) {} wsConn = null; }
+  if (mediaStream) { mediaStream.getTracks().forEach(t => t.stop()); mediaStream = null; }
+  if (scriptProcessor) { try { scriptProcessor.disconnect(); } catch(e) {} scriptProcessor = null; }
+
+  // Reset UI
+  overlay.classList.remove('visible');
+  hero.style.display = 'flex';
+  setTimeout(() => hero.classList.remove('fade-out'), 50);
+  setStatus('idle');
+  micBtn.style.display = 'none';
+  clearTranscript();
+  conversationHistory = [];
+  sessionStarted = false;
+  isListening = false;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  EVENT LISTENERS
+// ═══════════════════════════════════════════════════════════════════
+beginBtn.addEventListener('click', startSession);
+closeBtn.addEventListener('click', endSession);
+
+// Preload voices
+if (window.speechSynthesis) {
+  window.speechSynthesis.getVoices();
+  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+}
+
+// Prevent accidental close
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && overlay.classList.contains('visible')) endSession();
+});
+</script>
 </body>
 </html>
