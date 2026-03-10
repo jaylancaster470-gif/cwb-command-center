@@ -456,8 +456,8 @@
 // ═══════════════════════════════════════════════════════════════════
 //  CONFIGURATION
 // ═══════════════════════════════════════════════════════════════════
-const GEMINI_API_KEY = "AIzaSyC_ECkMFz2JmYwjp1bgIv0mqXJExT0gAu8";
-const GEMINI_REST_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+const OPENROUTER_KEY = "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";
+const AI_URL = "https://openrouter.ai/api/v1/chat/completions";
 const GEMINI_WS_URL   = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=${GEMINI_API_KEY}`;
 
 const RENE_SYSTEM_PROMPT = `You are René — a sophisticated AI concierge for a luxury jewelry experience. Your role is to guide business owners through a live demonstration of what their future "Private AI Client Command Interface" will look and feel like for their clients.
@@ -584,22 +584,30 @@ function clearTranscript() {
 //  GEMINI REST API — Text response → speak with Web Speech
 // ═══════════════════════════════════════════════════════════════════
 async function callGeminiREST(userMessage) {
-  // Build history
+  // Build OpenRouter messages format
+  const messages = [{ role: 'system', content: RENE_SYSTEM_PROMPT }];
+  conversationHistory.forEach(h => {
+    messages.push({ role: h.role === 'model' ? 'assistant' : 'user', content: h.parts[0].text });
+  });
+  messages.push({ role: 'user', content: userMessage });
   conversationHistory.push({ role: 'user', parts: [{ text: userMessage }] });
 
   const body = {
-    system_instruction: { parts: [{ text: RENE_SYSTEM_PROMPT }] },
-    contents: conversationHistory,
-    generationConfig: {
-      temperature: 0.85,
-      maxOutputTokens: 512,
-    }
+    model: 'anthropic/claude-3-5-sonnet',
+    messages: messages,
+    temperature: 0.85,
+    max_tokens: 512
   };
 
   try {
-    const res = await fetch(GEMINI_REST_URL, {
+    const res = await fetch(AI_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${OPENROUTER_KEY}`,
+        'HTTP-Referer': 'https://jaylancaster470-gif.github.io',
+        'X-Title': 'René CWB'
+      },
       body: JSON.stringify(body)
     });
 
@@ -609,9 +617,9 @@ async function callGeminiREST(userMessage) {
     }
 
     const data = await res.json();
-    const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const reply = data?.choices?.[0]?.message?.content || '';
 
-    if (!reply) throw new Error('Empty response from Gemini');
+    if (!reply) throw new Error('Empty response from AI');
 
     conversationHistory.push({ role: 'model', parts: [{ text: reply }] });
     return reply;
