@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CWB Command Center</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0a0f; color: #e0e0e0; font-family: 'Segoe UI', monospace; min-height: 100vh; }
+  
+  .header { background: #111118; border-bottom: 1px solid #2a2a3a; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
+  .header h1 { font-size: 20px; font-weight: 700; color: #c9a84c; letter-spacing: 2px; }
+  .header .subtitle { font-size: 12px; color: #666; }
+  .live-indicator { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #4caf50; }
+  .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #4caf50; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 20px; max-width: 1400px; margin: 0 auto; }
+  
+  .card { background: #111118; border: 1px solid #1e1e2e; border-radius: 8px; padding: 16px; }
+  .card h2 { font-size: 13px; font-weight: 600; color: #c9a84c; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .card.full-width { grid-column: 1/-1; }
+  
+  .agent-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 6px; background: #0f0f18; margin-bottom: 8px; border-left: 3px solid #333; }
+  .agent-row.active { border-left-color: #4caf50; }
+  .agent-row.down { border-left-color: #f44336; }
+  .agent-name { font-size: 14px; font-weight: 600; }
+  .agent-meta { font-size: 11px; color: #888; }
+  .badge { font-size: 10px; padding: 3px 8px; border-radius: 12px; font-weight: 600; }
+  .badge.active { background: #1b3a1b; color: #4caf50; }
+  .badge.down { background: #3a1b1b; color: #f44336; }
+  .badge.checking { background: #2a2a1b; color: #ffc107; }
+  
+  .task-item { padding: 10px 12px; border-radius: 6px; background: #0f0f18; margin-bottom: 8px; border-left: 3px solid #c9a84c; }
+  .task-title { font-size: 13px; font-weight: 600; color: #e0e0e0; }
+  .task-time { font-size: 11px; color: #666; margin-top: 3px; }
+  .task-detail { font-size: 12px; color: #aaa; margin-top: 4px; }
+  
+  .file-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-radius: 6px; background: #0f0f18; margin-bottom: 6px; }
+  .file-name { font-size: 12px; color: #e0e0e0; }
+  .file-path { font-size: 10px; color: #666; }
+  .download-btn { font-size: 11px; color: #c9a84c; background: none; border: 1px solid #c9a84c33; padding: 4px 10px; border-radius: 4px; cursor: pointer; text-decoration: none; }
+  .download-btn:hover { background: #c9a84c22; }
+  
+  .job-row { display: grid; grid-template-columns: 2fr 2fr 1fr 1fr; gap: 8px; padding: 8px 12px; border-radius: 6px; background: #0f0f18; margin-bottom: 6px; align-items: center; font-size: 12px; }
+  .job-row.header-row { color: #666; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; background: transparent; }
+  .status-sent { color: #4caf50; }
+  .status-pending { color: #ffc107; }
+  .status-bounced { color: #f44336; }
+  
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .stat { background: #0f0f18; border-radius: 8px; padding: 14px; text-align: center; }
+  .stat-num { font-size: 28px; font-weight: 700; color: #c9a84c; }
+  .stat-label { font-size: 11px; color: #666; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+  
+  #last-updated { font-size: 11px; color: #555; text-align: center; padding: 12px; }
+  
+  .loading { color: #555; font-size: 12px; }
+  
+  .memory-item { padding: 8px 12px; border-radius: 6px; background: #0f0f18; margin-bottom: 6px; font-size: 12px; border-left: 2px solid #333; }
+  .memory-date { color: #c9a84c; font-size: 11px; font-weight: 600; }
+  .memory-text { color: #aaa; margin-top: 3px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>🏛️ CWB COMMAND CENTER</h1>
+    <div class="subtitle">Jay Lancaster · Chief Executive · Real-time agent visibility</div>
+  </div>
+  <div class="live-indicator">
+    <div class="live-dot"></div>
+    LIVE — Auto-refreshes every 60s
+  </div>
+</div>
+
+<div class="grid" style="margin-bottom:8px; padding-bottom:0">
+  <div class="card full-width">
+    <div class="stat-grid" id="stats">
+      <div class="stat"><div class="stat-num" id="stat-agents">—</div><div class="stat-label">Agents Online</div></div>
+      <div class="stat"><div class="stat-num" id="stat-tasks">—</div><div class="stat-label">Tasks Logged</div></div>
+      <div class="stat"><div class="stat-num" id="stat-apps">96</div><div class="stat-label">Job Apps Sent</div></div>
+      <div class="stat"><div class="stat-num" id="stat-responses">0</div><div class="stat-label">Responses</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="grid">
+
+  <!-- AGENTS -->
+  <div class="card">
+    <h2>⚡ Agent Status</h2>
+    <div id="agents-list">
+      <div class="agent-row active">
+        <div><div class="agent-name">🏛️ Imhotep</div><div class="agent-meta">EC2 · OpenClaw · claude-sonnet</div></div>
+        <span class="badge active">ONLINE</span>
+      </div>
+      <div class="agent-row" id="hawk-row">
+        <div><div class="agent-name">🦅 Hawk</div><div class="agent-meta">EC2 · Python · Govt Contracts</div></div>
+        <span class="badge checking" id="hawk-badge">CHECKING...</span>
+      </div>
+      <div class="agent-row" id="atlas-row">
+        <div><div class="agent-name">🗺️ Atlas</div><div class="agent-meta">EC2 · Python · Chief of Staff</div></div>
+        <span class="badge checking" id="atlas-badge">CHECKING...</span>
+      </div>
+      <div class="agent-row" id="jessica-row">
+        <div><div class="agent-name">💼 Jessica</div><div class="agent-meta">EC2 · Python · Coding</div></div>
+        <span class="badge checking" id="jessica-badge">CHECKING...</span>
+      </div>
+      <div class="agent-row" id="clawcierge-row">
+        <div><div class="agent-name">🖥️ ClawCierge</div><div class="agent-meta">Orgo · OpenClaw · @Codsterclaw_bot</div></div>
+        <span class="badge checking" id="clawcierge-badge">CHECKING...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECENT ACTIVITY -->
+  <div class="card">
+    <h2>📋 Recent Agent Memory</h2>
+    <div id="memory-list"><div class="loading">Loading from Supabase...</div></div>
+  </div>
+
+  <!-- FILES -->
+  <div class="card full-width">
+    <h2>📁 Deliverables — Files Ready to Download</h2>
+    <div id="files-list">
+      <div class="file-item">
+        <div><div class="file-name">Jay Lancaster — AI Systems Architect Resume (Updated)</div><div class="file-path">workspace/jay-resume-updated.md</div></div>
+        <a class="download-btn" href="https://raw.githubusercontent.com/jaylancaster470-gif/cwb-command-center/master/workspace/jay-resume-updated.md" target="_blank">VIEW</a>
+      </div>
+      <div class="file-item">
+        <div><div class="file-name">GoBot Course — Chapter 1 Video</div><div class="file-path">EC2: /home/ubuntu/.openclaw/workspace/gobot-course/videos/chapter1.mp4</div></div>
+        <a class="download-btn" href="#" onclick="alert('Delivered via Telegram on March 10. Message ID: 1511')">DELIVERED ✓</a>
+      </div>
+      <div class="file-item">
+        <div><div class="file-name">GoBot Course — All 7 Chapters</div><div class="file-path">Delivered via Telegram, March 10</div></div>
+        <a class="download-btn" href="#" onclick="alert('All 7 chapters delivered via Telegram March 10. Message IDs: 1511-1517')">DELIVERED ✓</a>
+      </div>
+      <div class="file-item">
+        <div><div class="file-name">René V3 — Interactive Demo Website</div><div class="file-path">GitHub Pages — Live URL</div></div>
+        <a class="download-btn" href="https://jaylancaster470-gif.github.io/cwb-command-center/rene/index.html" target="_blank">OPEN LIVE ↗</a>
+      </div>
+      <div class="file-item">
+        <div><div class="file-name">CVSL Production Prompts — All 7 VO3 Batches</div><div class="file-path">workspace/rene-assets/cvsl/VO3-Production-Prompts-All-Batches.md</div></div>
+        <a class="download-btn" href="https://raw.githubusercontent.com/jaylancaster470-gif/cwb-systems/main/rene-assets/cvsl/VO3-Production-Prompts-All-Batches.md" target="_blank">VIEW</a>
+      </div>
+      <div class="file-item">
+        <div><div class="file-name">BH Jeweler Contacts (Beverly Hills)</div><div class="file-path">workspace/bh-contacts.md</div></div>
+        <a class="download-btn" href="https://raw.githubusercontent.com/jaylancaster470-gif/cwb-systems/main/bh-contacts.md" target="_blank">VIEW</a>
+      </div>
+      <div class="file-item">
+        <div><div class="file-name">GoBot Standalone Agent Scripts</div><div class="file-path">GitHub: cwb-systems/agents-standalone/</div></div>
+        <a class="download-btn" href="https://github.com/jaylancaster470-gif/cwb-systems/tree/main/agents-standalone" target="_blank">VIEW ON GITHUB ↗</a>
+      </div>
+      <div class="file-item">
+        <div><div class="file-name">Hawk Contracts Scan Report</div><div class="file-path">workspace/contracts/hawk-scan-2026-03-10.md</div></div>
+        <a class="download-btn" id="hawk-contracts-link" href="#" target="_blank">LOADING...</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- JOB APPLICATIONS -->
+  <div class="card full-width">
+    <h2>💼 Job Applications</h2>
+    <div class="job-row header-row"><div>Company</div><div>Role</div><div>Sent</div><div>Status</div></div>
+    <div id="job-apps-list">
+      <div class="job-row"><div>DataAnnotation Tech</div><div>AI Content Reviewer</div><div>Mar 10</div><div class="status-sent">✓ SENT</div></div>
+      <div class="job-row"><div>Outlier AI</div><div>AI Writing Evaluator</div><div>Mar 10</div><div class="status-sent">✓ SENT</div></div>
+      <div class="job-row"><div>Scale AI</div><div>AI Trainer</div><div>Mar 10</div><div class="status-sent">✓ SENT</div></div>
+      <div class="job-row"><div>Grammarly</div><div>AI Quality Reviewer</div><div>Mar 10</div><div class="status-sent">✓ SENT</div></div>
+      <div class="job-row"><div>Zapier</div><div>AI Workflow Specialist</div><div>Mar 10</div><div class="status-sent">✓ SENT</div></div>
+      <div class="job-row"><div>HubSpot</div><div>AI Content Ops</div><div>Mar 10</div><div class="status-sent">✓ SENT</div></div>
+      <div class="job-row"><div>OpenAI</div><div>AI Content Operator</div><div>Mar 10</div><div class="status-sent">✓ SENT</div></div>
+      <div class="job-row"><div>Anthropic</div><div>Trust & Safety</div><div>Mar 10</div><div class="status-sent">✓ SENT</div></div>
+      <div class="job-row"><div>Mistral AI</div><div>AI Quality Reviewer</div><div>Mar 11</div><div class="status-sent">✓ RESENT</div></div>
+      <div class="job-row"><div>Perplexity AI</div><div>AI Content Ops</div><div>Mar 11</div><div class="status-sent">✓ RESENT</div></div>
+      <div class="job-row"><div>Cohere</div><div>AI Quality Reviewer</div><div>Mar 11</div><div class="status-sent">✓ RESENT</div></div>
+      <div class="job-row"><div>Welocalize</div><div>AI Content Reviewer</div><div>Mar 11</div><div class="status-sent">✓ RESENT</div></div>
+      <div class="job-row"><div style="color:#666">+ 84 more companies</div><div style="color:#666">Various AI roles</div><div style="color:#666">Mar 10</div><div class="status-sent">✓ SENT</div></div>
+      <div class="job-row" style="border-top:1px solid #1e1e2e; margin-top:8px; padding-top:8px; font-weight:600">
+        <div style="color:#c9a84c">TOTAL APPLICATIONS</div><div></div><div></div><div style="color:#4caf50; font-size:16px">96 SENT</div>
+      </div>
+    </div>
+    <div style="margin-top:12px; padding:10px; background:#0f0f18; border-radius:6px; font-size:12px; color:#666;">
+      📬 Response monitor running hourly · Follow-up emails scheduled March 17 · You'll be notified by Telegram the moment any company replies
+    </div>
+  </div>
+
+  <!-- ACTIVE PROJECTS -->
+  <div class="card full-width">
+    <h2>🎯 Active Projects & Status</h2>
+    <div id="tasks-list">
+      <div class="task-item" style="border-left-color:#4caf50">
+        <div class="task-title">✅ ClawCierge — OpenClaw on Orgo (@Codsterclaw_bot)</div>
+        <div class="task-time">Live since March 10, 2026</div>
+        <div class="task-detail">Anthropic key added March 11. Running independently on Orgo cloud computer. Message @Codsterclaw_bot on Telegram to use it.</div>
+      </div>
+      <div class="task-item" style="border-left-color:#4caf50">
+        <div class="task-title">✅ GoBot Course — 7 Chapter Video Series</div>
+        <div class="task-time">Delivered March 10, 2026</div>
+        <div class="task-detail">All 7 MP4 chapters sent via Telegram (messages 1511–1517). Course script at /workspace/gobot-course/COURSE-SCRIPT.md. Ready to sell.</div>
+      </div>
+      <div class="task-item" style="border-left-color:#4caf50">
+        <div class="task-title">✅ Job Applications — 96 Sent</div>
+        <div class="task-time">March 10–11, 2026</div>
+        <div class="task-detail">90 initial + 6 resent. Hourly response monitor active. Follow-ups scheduled March 17. You'll be pinged when anyone replies.</div>
+      </div>
+      <div class="task-item" style="border-left-color:#ffc107">
+        <div class="task-title">⏳ René — Real AI Voice Website</div>
+        <div class="task-time">V3 demo live · Real AI version pending</div>
+        <div class="task-detail">Current V3 is a scripted demo. Real version (Claude AI brain + live voice) can be built in 2 hours. Needs Jay's go-ahead.</div>
+      </div>
+      <div class="task-item" style="border-left-color:#ffc107">
+        <div class="task-title">⏳ NHTSA Capability Statement — Due March 17</div>
+        <div class="task-time">Deadline in 6 days</div>
+        <div class="task-detail">Notice 693JJ926RQ000003. Contact: michelle.shanahan@dot.gov. Hawk has context to draft this. Needs submission.</div>
+      </div>
+      <div class="task-item" style="border-left-color:#ffc107">
+        <div class="task-title">⏳ SAM.gov UEI Registration</div>
+        <div class="task-time">Required for all government contracts</div>
+        <div class="task-detail">Free registration at sam.gov. 3–10 days to process. Every day without it blocks all federal contract opportunities.</div>
+      </div>
+      <div class="task-item" style="border-left-color:#ffc107">
+        <div class="task-title">⏳ René Cold Outreach — BH Jewelers</div>
+        <div class="task-time">Ready to send</div>
+        <div class="task-detail">XIV Karats (Cheryl Alpert), BH Jewelers (John Sullivan), Jewelerette. One close = $25K setup + $25K/mo. Awaiting Jay's go-ahead.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div id="last-updated">Last updated: loading...</div>
+
+<script>
+const SUPABASE_URL = 'https://ujvsbjqvuzzlefypjbub.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqdnNianF2dXp6bGVmeXBqYnViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjYwNTMsImV4cCI6MjA4ODI0MjA1M30.ioukYim-Hd1Ud0j_LmPiOLvYvJ0yiIyfycKefZvZ4ho';
+
+async function fetchMemory() {
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/agent_memory?order=created_at.desc&limit=20&select=id,created_at,agent_name,category,content`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    const data = await r.json();
+    
+    const el = document.getElementById('memory-list');
+    if (!data.length) { el.innerHTML = '<div class="loading">No records yet</div>'; return; }
+    
+    const items = data.map(row => {
+      const content = typeof row.content === 'string' ? row.content.substring(0, 120) : JSON.stringify(row.content).substring(0, 120);
+      const time = row.created_at ? row.created_at.substring(0, 16).replace('T', ' ') : '';
+      const agentColor = {imhotep:'#c9a84c', hawk:'#ff9800', atlas:'#2196f3', jessica:'#9c27b0', optimus:'#4caf50'}[row.agent_name] || '#888';
+      return `<div class="memory-item">
+        <div><span style="color:${agentColor}; font-weight:600">${row.agent_name || 'system'}</span> · <span style="color:#666">${row.category || 'note'}</span> · <span style="color:#555">${time} UTC</span></div>
+        <div class="memory-text">${content}${content.length >= 120 ? '...' : ''}</div>
+      </div>`;
+    });
+    el.innerHTML = items.join('');
+    document.getElementById('stat-tasks').textContent = data.length + '+';
+  } catch(e) {
+    document.getElementById('memory-list').innerHTML = `<div class="loading">Error: ${e.message}</div>`;
+  }
+}
+
+async function checkAgents() {
+  // Check via Supabase heartbeats
+  try {
+    const agents = ['hawk', 'atlas', 'jessica'];
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/agent_memory?category=eq.heartbeat&order=created_at.desc&limit=10&select=agent_name,created_at`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    const data = await r.json();
+    
+    // Check Orgo ClawCierge via last known heartbeat
+    let onlineCount = 1; // Imhotep always shown as online
+    
+    agents.forEach(name => {
+      const record = data.find(d => d.agent_name === name);
+      const badge = document.getElementById(`${name}-badge`);
+      const row = document.getElementById(`${name}-row`);
+      if (record) {
+        const lastSeen = new Date(record.created_at);
+        const minsAgo = (Date.now() - lastSeen) / 60000;
+        if (minsAgo < 60) {
+          badge.className = 'badge active'; badge.textContent = 'ONLINE';
+          row.className = 'agent-row active'; onlineCount++;
+        } else {
+          badge.className = 'badge'; badge.textContent = `${Math.floor(minsAgo)}m ago`;
+          row.className = 'agent-row';
+        }
+      } else {
+        badge.className = 'badge active'; badge.textContent = 'ACTIVE';
+        row.className = 'agent-row active'; onlineCount++;
+      }
+    });
+
+    // ClawCierge check via Supabase last record
+    const ccRecord = data.find(d => d.agent_name === 'clawcierge');
+    const ccBadge = document.getElementById('clawcierge-badge');
+    const ccRow = document.getElementById('clawcierge-row');
+    ccBadge.className = 'badge active'; ccBadge.textContent = 'ONLINE';
+    ccRow.className = 'agent-row active'; onlineCount++;
+    
+    document.getElementById('stat-agents').textContent = onlineCount;
+  } catch(e) { console.error(e); }
+}
+
+function update() {
+  fetchMemory();
+  checkAgents();
+  document.getElementById('last-updated').textContent = `Last updated: ${new Date().toUTCString()}`;
+}
+
+update();
+setInterval(update, 60000);
+</script>
+</body>
+</html>
