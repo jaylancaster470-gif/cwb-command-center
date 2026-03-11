@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>From Day One — Build a Bank-Ready Business & Win Government Contracts</title>
+<meta name="description" content="The step-by-step system for creating a financially capable company from day one — and taking it into America's $700 billion recession-proof market.">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C96A;
+    --dark: #0A0A0F;
+    --dark2: #111118;
+    --dark3: #1A1A28;
+    --text: #E8E8F0;
+    --muted: #888899;
+  }
+
+  body { 
+    font-family: 'Inter', sans-serif; 
+    background: var(--dark); 
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    background: rgba(10,10,15,0.95); backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    padding: 16px 40px; display: flex; justify-content: space-between; align-items: center;
+  }
+  .logo { font-size: 18px; font-weight: 800; color: var(--gold); letter-spacing: 2px; }
+  .logo span { color: var(--text); font-weight: 300; }
+  .nav-cta { 
+    background: var(--gold); color: #000; font-weight: 700; font-size: 13px;
+    padding: 10px 22px; border-radius: 6px; text-decoration: none; letter-spacing: 0.5px;
+    transition: 0.2s;
+  }
+  .nav-cta:hover { background: var(--gold-light); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    background: radial-gradient(ellipse at 30% 50%, rgba(201,168,76,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 20%, rgba(100,80,200,0.06) 0%, transparent 50%),
+                var(--dark);
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 120px 20px 80px;
+  }
+  .hero-inner { max-width: 860px; }
+  .hero-badge {
+    display: inline-block; background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.4);
+    color: var(--gold); font-size: 12px; font-weight: 600; letter-spacing: 2px;
+    padding: 8px 20px; border-radius: 20px; margin-bottom: 32px; text-transform: uppercase;
+  }
+  .hero h1 {
+    font-size: clamp(38px, 6vw, 72px); font-weight: 900; line-height: 1.05;
+    margin-bottom: 28px; letter-spacing: -1px;
+  }
+  .hero h1 em { font-style: normal; color: var(--gold); }
+  .hero p {
+    font-size: clamp(16px, 2.5vw, 20px); color: var(--muted); line-height: 1.7;
+    max-width: 680px; margin: 0 auto 48px;
+  }
+  .hero-stats {
+    display: flex; gap: 40px; justify-content: center; margin-bottom: 52px;
+    flex-wrap: wrap;
+  }
+  .hero-stat .num { font-size: 36px; font-weight: 800; color: var(--gold); }
+  .hero-stat .lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  
+  .cta-group { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--gold); color: #000; font-weight: 800; font-size: 16px;
+    padding: 18px 44px; border-radius: 8px; text-decoration: none; letter-spacing: 0.3px;
+    transition: 0.2s; display: inline-block;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(201,168,76,0.3); }
+  .btn-secondary {
+    border: 1px solid rgba(255,255,255,0.2); color: var(--text); font-weight: 600; font-size: 15px;
+    padding: 18px 36px; border-radius: 8px; text-decoration: none; transition: 0.2s; display: inline-block;
+  }
+  .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-hint { font-size: 12px; color: var(--muted); margin-top: 16px; text-align: center; }
+
+  /* SECTIONS */
+  section { padding: 100px 20px; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 3px;
+    font-weight: 600; margin-bottom: 16px;
+  }
+  h2 {
+    font-size: clamp(30px, 5vw, 50px); font-weight: 800; line-height: 1.1;
+    letter-spacing: -0.5px; margin-bottom: 20px;
+  }
+  h2 em { font-style: normal; color: var(--gold); }
+  .section-sub { font-size: 18px; color: var(--muted); max-width: 600px; line-height: 1.6; margin-bottom: 60px; }
+
+  /* FOR WHO */
+  .for-who { background: var(--dark2); }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+  .card {
+    background: var(--dark3); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px; padding: 28px;
+    transition: 0.2s;
+  }
+  .card:hover { border-color: rgba(201,168,76,0.3); transform: translateY(-3px); }
+  .card-icon { font-size: 32px; margin-bottom: 16px; }
+  .card h3 { font-size: 17px; font-weight: 700; margin-bottom: 10px; }
+  .card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+  /* WHAT YOU GET */
+  .modules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+  .module {
+    background: var(--dark2); border: 1px solid rgba(255,255,255,0.06);
+    border-left: 3px solid var(--gold); border-radius: 8px; padding: 22px 24px;
+    display: flex; gap: 16px; align-items: flex-start;
+  }
+  .module-num {
+    background: rgba(201,168,76,0.15); color: var(--gold);
+    font-size: 13px; font-weight: 800; width: 36px; height: 36px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .module h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .module p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* MARKET */
+  .market { background: var(--dark2); }
+  .market-big {
+    background: linear-gradient(135deg, rgba(201,168,76,0.1), rgba(100,80,200,0.05));
+    border: 1px solid rgba(201,168,76,0.2); border-radius: 16px;
+    padding: 60px; text-align: center; margin-bottom: 60px;
+  }
+  .market-big .number { font-size: clamp(60px, 10vw, 100px); font-weight: 900; color: var(--gold); line-height: 1; }
+  .market-big .caption { font-size: 18px; color: var(--muted); margin-top: 12px; }
+  .market-breakdown { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+  .breakdown-item { text-align: center; padding: 28px; background: var(--dark3); border-radius: 10px; }
+  .breakdown-item .pct { font-size: 40px; font-weight: 900; color: var(--gold); }
+  .breakdown-item .desc { font-size: 13px; color: var(--muted); margin-top: 6px; line-height: 1.4; }
+
+  /* WHAT'S INSIDE */
+  .inside { background: var(--dark); }
+  .deliverables { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+  .deliverable {
+    display: flex; gap: 14px; align-items: flex-start;
+    background: var(--dark2); padding: 18px 20px; border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .check { 
+    width: 22px; height: 22px; background: rgba(74,222,128,0.15); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .deliverable-text { font-size: 14px; line-height: 1.5; }
+  .deliverable-text strong { display: block; margin-bottom: 2px; }
+  .deliverable-text span { color: var(--muted); font-size: 12px; }
+
+  /* COMMUNITY */
+  .community { background: var(--dark2); }
+  .community-inner {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+  }
+  @media(max-width: 768px) { .community-inner { grid-template-columns: 1fr; } }
+  .telegram-mockup {
+    background: #17212B; border-radius: 16px; padding: 20px;
+    border: 1px solid rgba(255,255,255,0.1); font-family: monospace;
+  }
+  .tg-header { 
+    display: flex; align-items: center; gap: 12px; padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 16px;
+  }
+  .tg-avatar { 
+    width: 42px; height: 42px; border-radius: 50%; background: var(--gold);
+    display: flex; align-items: center; justify-content: center; font-weight: 800; color: #000; font-size: 16px;
+  }
+  .tg-name { font-weight: 700; font-size: 15px; }
+  .tg-count { font-size: 12px; color: #7A9DB8; }
+  .tg-msg { margin-bottom: 12px; }
+  .tg-bubble {
+    background: #1F2D3D; border-radius: 10px 10px 10px 0; padding: 10px 14px;
+    font-size: 13px; display: inline-block; max-width: 85%; line-height: 1.5;
+  }
+  .tg-bubble.mine { background: #2B5278; border-radius: 10px 10px 0 10px; float: right; }
+  .tg-time { font-size: 10px; color: #7A9DB8; margin-top: 4px; }
+  .clearfix::after { content:''; display:table; clear:both; }
+
+  /* AUTHOR */
+  .author { background: var(--dark); }
+  .author-inner { 
+    display: grid; grid-template-columns: auto 1fr; gap: 48px; align-items: start;
+    max-width: 800px;
+  }
+  @media(max-width: 600px) { .author-inner { grid-template-columns: 1fr; } }
+  .author-photo {
+    width: 140px; height: 140px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), #8B5E00);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 48px; font-weight: 900; color: #000; flex-shrink: 0;
+  }
+  .author-name { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+  .author-title { font-size: 14px; color: var(--gold); margin-bottom: 16px; }
+  .author-bio { font-size: 15px; color: var(--muted); line-height: 1.7; }
+
+  /* PRICING */
+  .pricing { background: var(--dark2); text-align: center; }
+  .price-card {
+    background: var(--dark3); border: 2px solid var(--gold);
+    border-radius: 16px; padding: 48px 40px; max-width: 460px; margin: 0 auto;
+    position: relative;
+  }
+  .price-badge {
+    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    background: var(--gold); color: #000; font-size: 11px; font-weight: 800;
+    padding: 5px 16px; border-radius: 20px; letter-spacing: 1px; white-space: nowrap;
+  }
+  .price-amount { font-size: 64px; font-weight: 900; color: var(--gold); line-height: 1; }
+  .price-period { font-size: 18px; color: var(--muted); margin-bottom: 32px; }
+  .price-features { text-align: left; margin-bottom: 36px; }
+  .price-feature { 
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 14px;
+  }
+  .price-feature:last-child { border-bottom: none; }
+  .price-feature .tick { color: #4ADE80; font-size: 16px; }
+  .price-guarantee { font-size: 12px; color: var(--muted); margin-top: 20px; }
+
+  /* FAQ */
+  .faq { background: var(--dark); }
+  .faq-list { max-width: 720px; }
+  .faq-item { border-bottom: 1px solid rgba(255,255,255,0.08); padding: 20px 0; }
+  .faq-q { font-size: 16px; font-weight: 600; margin-bottom: 10px; }
+  .faq-a { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+  /* FINAL CTA */
+  .final-cta {
+    background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(100,80,200,0.08)), var(--dark2);
+    text-align: center; padding: 120px 20px;
+  }
+  
+  /* FOOTER */
+  footer {
+    background: var(--dark); border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 40px; text-align: center; font-size: 13px; color: var(--muted);
+  }
+
+  /* MOBILE */
+  @media(max-width: 600px) {
+    nav { padding: 14px 20px; }
+    section { padding: 70px 16px; }
+    .market-big { padding: 32px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">FROM DAY <span>ONE</span></div>
+  <a href="#pricing" class="nav-cta">Join Now →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">🇺🇸 The Government Contracting Blueprint</div>
+    <h1>Build It Right.<br><em>Fund It Fast.</em><br>Contract for Life.</h1>
+    <p>The step-by-step system for creating a bank-compliant business from Day One — then taking it into America's $700 billion recession-proof market. Built for the people who've been left behind. By one of them.</p>
+    
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">$700B+</div><div class="lbl">Govt spends annually</div></div>
+      <div class="hero-stat"><div class="num">$161B</div><div class="lbl">Mandated to small biz</div></div>
+      <div class="hero-stat"><div class="num">7</div><div class="lbl">Modules to completion</div></div>
+    </div>
+
+    <div class="cta-group">
+      <a href="#pricing" class="btn-primary">Get Instant Access — $97/mo</a>
+      <a href="#modules" class="btn-secondary">See What's Inside</a>
+    </div>
+    <p class="btn-hint">Cancel anytime · Instant access · Community included</p>
+  </div>
+</section>
+
+<!-- FOR WHO -->
+<section class="for-who">
+  <div class="container">
+    <div class="section-label">This Is For You If...</div>
+    <h2>This wasn't built for people<br>who already <em>"made it."</em></h2>
+    <p class="section-sub">This was built for the person still climbing back from the pandemic. The one who's tired of watching the opportunity pass while nobody explains how to access it.</p>
+    
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">💥</div>
+        <h3>You've been trying — but spinning</h3>
+        <p>You start, hit a wall, restart. The information is scattered, the process unclear. This gives you the exact path, in order, no gaps.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🏦</div>
+        <h3>Banks keep telling you "no"</h3>
+        <p>Your personal credit is damaged. You don't know how to build business credit that's completely separate from your personal profile. That ends here.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔒</div>
+        <h3>The system seems designed against you</h3>
+        <p>Government contracts, business funding — these feel like they're for "connected" people. They're not. The rules are public. This teaches you to use them.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h3>You're ready to actually commit</h3>
+        <p>Not browse, not think about it. Commit. If that's you, this community is where you belong. The information works for those who work it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULES -->
+<section class="inside" id="modules">
+  <div class="container">
+    <div class="section-label">The Curriculum</div>
+    <h2>7 Modules. Full system.<br><em>No fluff.</em></h2>
+    <p class="section-sub">Every module is a how-to video + PDF checklist. You complete each step and move forward. No guesswork.</p>
+    
+    <div class="modules-grid">
+      <div class="module">
+        <div class="module-num">1</div>
+        <div>
+          <h3>Naming Your Company for Maximum Access</h3>
+          <p>Why a non-industry-specific name protects you, opens more doors, and makes your company bank-compliant before you spend a dollar.</p>
+        </div>
+      </div>
+      <div class="module">
+        <div class="module-num">2</div>
+        <div>
+          <h3>Registering Your LLC or Corporation</h3>
+          <p>State-by-state walkthrough. Which entity type, which state, what fees, and exactly how to file — without paying Legal Zoom.</p>
+        </div>
+      </div>
+      <div class="module">
+        <div class="module-num">3</div>
+        <div>
+          <h3>Getting Your EIN — Free, Same Day</h3>
+          <p>Your Employer Identification Number is your business's Social Security number. IRS issues it free in minutes. Here's exactly how.</p>
+        </div>
+      </div>
+      <div class="module">
+        <div class="module-num">4</div>
+        <div>
+          <h3>Building Your Business Credit Profile</h3>
+          <p>How to start building a credit profile completely separate from your personal credit — from the moment the company is formed.</p>
+        </div>
+      </div>
+      <div class="module">
+        <div class="module-num">5</div>
+        <div>
+          <h3>Domain, Email, Phone & Business Address</h3>
+          <p>Why banks require these and exactly how to set them up for under $50 total. The professional infrastructure that opens doors.</p>
+        </div>
+      </div>
+      <div class="module">
+        <div class="module-num">6</div>
+        <div>
+          <h3>Registered Agent & Compliance</h3>
+          <p>What a registered agent is, why you need one, and how to get it set up correctly from day one to stay legally protected.</p>
+        </div>
+      </div>
+      <div class="module">
+        <div class="module-num">7</div>
+        <div>
+          <h3>SAM.gov Registration → Government Contracts</h3>
+          <p>How to register in the System for Award Management, find contracts matching your business, and position yourself to win.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARKET -->
+<section class="market">
+  <div class="container">
+    <div class="section-label">The Opportunity</div>
+    <h2>The government doesn't stop<br>spending during <em>recessions.</em></h2>
+    <p class="section-sub">While private sector companies collapse, the U.S. Government increases spending. This is the only recession-proof customer on the planet — and by law, small businesses get a guaranteed slice.</p>
+    
+    <div class="market-big">
+      <div class="number">$700B+</div>
+      <div class="caption">Spent by the U.S. Government every year in contracts with businesses like yours</div>
+    </div>
+    
+    <div class="market-breakdown">
+      <div class="breakdown-item">
+        <div class="pct">23%</div>
+        <div class="desc">Mandated to go to<br><strong>Total Small Business</strong><br>= $161 Billion+</div>
+      </div>
+      <div class="breakdown-item">
+        <div class="pct">5%</div>
+        <div class="desc">Set aside for<br><strong>Small Disadvantaged<br>Business Enterprises</strong></div>
+      </div>
+      <div class="breakdown-item">
+        <div class="pct">5%</div>
+        <div class="desc">Set aside for<br><strong>Women-Owned<br>Businesses</strong></div>
+      </div>
+      <div class="breakdown-item">
+        <div class="pct">3%</div>
+        <div class="desc">Set aside for<br><strong>Service Disabled<br>Veteran Businesses</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT'S INCLUDED -->
+<section class="inside">
+  <div class="container">
+    <div class="section-label">Everything Included</div>
+    <h2>Not just videos.<br>A complete <em>system.</em></h2>
+    <p class="section-sub">Every format, every tool, built for people who learn differently.</p>
+    
+    <div class="deliverables">
+      <div class="deliverable">
+        <div class="check">✓</div>
+        <div class="deliverable-text"><strong>7 How-To Video Modules</strong><span>Step-by-step walkthroughs you follow in real time</span></div>
+      </div>
+      <div class="deliverable">
+        <div class="check">✓</div>
+        <div class="deliverable-text"><strong>E-Book: From Day One</strong><span>Full digital copy included with membership</span></div>
+      </div>
+      <div class="deliverable">
+        <div class="check">✓</div>
+        <div class="deliverable-text"><strong>Audiobook Version</strong><span>Learn on your commute, at the gym, anywhere</span></div>
+      </div>
+      <div class="deliverable">
+        <div class="check">✓</div>
+        <div class="deliverable-text"><strong>PDF Checklists for Every Module</strong><span>Print it, check it off, know you did it right</span></div>
+      </div>
+      <div class="deliverable">
+        <div class="check">✓</div>
+        <div class="deliverable-text"><strong>Community Chat (Live)</strong><span>Real-time group — ask questions, get answers</span></div>
+      </div>
+      <div class="deliverable">
+        <div class="check">✓</div>
+        <div class="deliverable-text"><strong>SAM.gov Registration Walkthrough</strong><span>Your gateway to $700B in federal contracts</span></div>
+      </div>
+      <div class="deliverable">
+        <div class="check">✓</div>
+        <div class="deliverable-text"><strong>Business Credit Starter Guide</strong><span>Building credit that's 100% separate from personal</span></div>
+      </div>
+      <div class="deliverable">
+        <div class="check">✓</div>
+        <div class="deliverable-text"><strong>Contract Research Tools Guide</strong><span>Free tools to find exactly who's buying what you sell</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMMUNITY -->
+<section class="community">
+  <div class="container">
+    <div class="community-inner">
+      <div>
+        <div class="section-label">The Community</div>
+        <h2>You're not doing this <em>alone.</em></h2>
+        <p style="color:var(--muted); font-size:16px; line-height:1.7; margin-bottom:32px;">
+          Every member gets access to a private community — real people, real progress, real conversations. Ask questions. Share wins. Get unstuck fast.
+        </p>
+        <p style="color:var(--muted); font-size:16px; line-height:1.7; margin-bottom:32px;">
+          The community runs on Telegram — the same platform you probably already use. No new app to download. Just join the group and you're in.
+        </p>
+        <a href="#pricing" class="btn-primary">Join the Community →</a>
+      </div>
+      <div class="telegram-mockup">
+        <div class="tg-header">
+          <div class="tg-avatar">F1</div>
+          <div>
+            <div class="tg-name">From Day One — Members</div>
+            <div class="tg-count">247 members · 18 online</div>
+          </div>
+        </div>
+        <div class="tg-msg">
+          <div class="tg-bubble">Just got my LLC approved in Maryland 🔥 Module 2 worked exactly as described</div>
+          <div class="tg-time">Marcus T. · 2:14 PM</div>
+        </div>
+        <div class="tg-msg clearfix">
+          <div class="tg-bubble mine">Congrats! What state did you file in?</div>
+          <div class="tg-time" style="text-align:right">You · 2:15 PM</div>
+        </div>
+        <div class="tg-msg">
+          <div class="tg-bubble">Got my EIN same day like it said. No accountant, no lawyer, just followed the steps 🙏</div>
+          <div class="tg-time">Keisha R. · 2:18 PM</div>
+        </div>
+        <div class="tg-msg">
+          <div class="tg-bubble">SAM.gov registration approved — eligible for federal contracts. This is real 💪</div>
+          <div class="tg-time">DeShawn M. · 2:22 PM</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AUTHOR -->
+<section class="author">
+  <div class="container">
+    <div class="section-label">Your Instructor</div>
+    <div class="author-inner">
+      <div class="author-photo">JL</div>
+      <div>
+        <div class="author-name">Jay Lancaster</div>
+        <div class="author-title">Founder, Community Wealth Builders · Government Contracting Strategist</div>
+        <p class="author-bio" style="margin-bottom:16px">
+          "I was born and raised in Brooklyn. For many years I was caught up in the streets. This information wasn't written for the people who already figured it out — it was written for the people who've been trying and couldn't find a clear path."
+        </p>
+        <p class="author-bio">
+          Two years of lived experience distilled into a practical, no-fluff system. No legal jargon, no theory. Just the exact steps, in the right order, that transform a person with no business background into a registered, bank-compliant, government-contract-eligible business owner.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="section-label">Membership</div>
+    <h2 style="margin-bottom:12px">Start today.<br><em>Cancel anytime.</em></h2>
+    <p style="color:var(--muted); font-size:16px; margin-bottom:52px">No contracts. No long-term commitment. Just show up and do the work.</p>
+    
+    <div class="price-card">
+      <div class="price-badge">MOST POPULAR</div>
+      <div class="price-amount">$97</div>
+      <div class="price-period">per month · cancel anytime</div>
+      
+      <div class="price-features">
+        <div class="price-feature"><span class="tick">✓</span> All 7 video modules — instant access</div>
+        <div class="price-feature"><span class="tick">✓</span> Full e-book (digital)</div>
+        <div class="price-feature"><span class="tick">✓</span> Audiobook version</div>
+        <div class="price-feature"><span class="tick">✓</span> PDF checklists for every step</div>
+        <div class="price-feature"><span class="tick">✓</span> Private Telegram community</div>
+        <div class="price-feature"><span class="tick">✓</span> SAM.gov registration walkthrough</div>
+        <div class="price-feature"><span class="tick">✓</span> New content added monthly</div>
+      </div>
+      
+      <a href="https://buy.stripe.com/PLACEHOLDER" class="btn-primary" style="width:100%; text-align:center; display:block" id="join-btn">
+        Get Instant Access →
+      </a>
+      <p class="price-guarantee">🔒 Secure checkout · Cancel anytime in your account settings</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="container">
+    <div class="section-label">FAQ</div>
+    <h2 style="margin-bottom:48px">Common <em>Questions</em></h2>
+    
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">Do I need any business experience to start?</div>
+        <div class="faq-a">None. This was specifically written for people who've never owned a business. Every step is explained from scratch, no assumed knowledge.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What if my personal credit is damaged?</div>
+        <div class="faq-a">That's exactly who this is for. The whole system is built around creating a business credit profile that is completely separate from your personal credit. Your personal credit situation does not block you here.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How long does it take to get through the course?</div>
+        <div class="faq-a">Most members complete the core 7 modules in 2–3 weeks. The actual business registration steps take 1–5 business days depending on your state.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Is this legal advice?</div>
+        <div class="faq-a">No — this is based on the instructor's personal experience and research. It is not legal, financial, or accounting advice. For your specific situation, always consult a licensed professional.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Can I cancel at any time?</div>
+        <div class="faq-a">Yes. Cancel anytime directly from your account. No calls, no emails required. Your access continues until the end of the billing period.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What is SAM.gov and why does it matter?</div>
+        <div class="faq-a">SAM.gov (System for Award Management) is the federal database all businesses must register in to receive government contracts. Registration is free. Without it, you cannot receive a single federal dollar. Module 7 walks you through it step by step.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <div class="container" style="max-width:700px; margin:0 auto">
+    <h2 style="margin-bottom:20px">You've been trying.<br>Now let's <em>finish it.</em></h2>
+    <p style="font-size:18px; color:var(--muted); line-height:1.7; margin-bottom:48px">
+      The information in this system has been sitting in closed rooms for years. The people who needed it most were never invited into those rooms. That changes now.
+    </p>
+    <a href="#pricing" class="btn-primary" style="font-size:18px; padding:22px 52px">Get Started Today →</a>
+    <p class="btn-hint" style="margin-top:20px">$97/month · Cancel anytime · Instant access</p>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 From Day One — Community Wealth Builders, LLC · All rights reserved</p>
+  <p style="margin-top:8px">Not legal, financial, or accounting advice. Results depend on individual effort and circumstances.</p>
+</footer>
+
+</body>
+</html>
