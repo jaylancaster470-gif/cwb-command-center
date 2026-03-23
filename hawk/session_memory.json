@@ -1,0 +1,34 @@
+{
+  "project": "HAWK Command OS",
+  "operator": "Jay Lancaster \u2014 goes by Love",
+  "session_date": "2026-03-23",
+  "gmail": "creator@cwbuni.com",
+  "telegram_chat_id": "8408576795",
+  "calendly": "https://calendly.com/communitywealthbuilders/30min",
+  "stripe_simulation_link": "https://buy.stripe.com/3cIdR1gLMbEY75cbp25wI0d",
+  "stripe_pilot_link": "https://buy.stripe.com/eVq14f8fg7oIfBI64I5wI0e",
+  "offers": {
+    "simulation_package": 7500,
+    "pilot_deployment": 100000
+  },
+  "revenue_targets": {
+    "48_hours": 20000,
+    "21_days": 75000
+  },
+  "positioning": "Compliance defense and litigation protection \u2014 NOT better technology",
+  "key_stat": "Eureka Casino $1M settlement NRS 603A.215 failure to implement reasonable security measures",
+  "demo_flow": "Dashboard 1min > Fire Camera Alert 2min > Responder Portal 2min > Simulation Mode 2min > Audit Trail 1min > Pilot offer 2min",
+  "critical_rules": [
+    "Never send Stripe payment links in email body",
+    "Never send Perplexity links in outreach",
+    "Every email needs GIF thumbnail linking to MP4",
+    "Jay approves every email before it sends",
+    "CVSL then demo then close \u2014 never skip steps"
+  ],
+  "outstanding": [
+    "Host MP4 publicly for GIF thumbnail embedding",
+    "Verify all email addresses before resend",
+    "Set up Supabase tables \u2014 needs service_role key from dashboard",
+    "LinkedIn DM to Bill Young \u2014 possible retirement"
+  ]
+}
