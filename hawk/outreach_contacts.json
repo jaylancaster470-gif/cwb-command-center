@@ -1,0 +1,137 @@
+[
+  {
+    "name": "Steve Begalman",
+    "company": "Boyd Gaming",
+    "email": "stevebegalman@boydgaming.com",
+    "title": "CISO/VP Information Security",
+    "status": "sent",
+    "warm_intel": "Active Sept 2025 breach",
+    "priority": "P1"
+  },
+  {
+    "name": "Rachel Rojas",
+    "company": "Boyd Gaming",
+    "email": "rachelrojas@boydgaming.com",
+    "title": "VP Security",
+    "status": "sent",
+    "warm_intel": "Former FBI AD, active breach",
+    "priority": "P1"
+  },
+  {
+    "name": "Geoff Sample",
+    "company": "Station Casinos",
+    "email": "geoff.sample@stationcasinos.com",
+    "title": "VP Security & Surveillance",
+    "status": "sent",
+    "warm_intel": "Nevada AML enforcement wave",
+    "priority": "P1"
+  },
+  {
+    "name": "Elaine Guidroz",
+    "company": "Full House Resorts",
+    "email": "eguidroz@fullhouseresorts.com",
+    "title": "SVP GC & Compliance",
+    "status": "sent",
+    "warm_intel": "Single compliance owner 5 properties",
+    "priority": "P1"
+  },
+  {
+    "name": "Brandon Gibson",
+    "company": "Maverick Gaming",
+    "email": "Brandon.Gibson@maverickgaming.com",
+    "title": "Executive Director Compliance",
+    "status": "sent",
+    "warm_intel": "Bankruptcy restructuring",
+    "priority": "P2"
+  },
+  {
+    "name": "Kim McCabe-Ward",
+    "company": "Maverick Gaming",
+    "email": "kim.mccabeward@maverickgaming.com",
+    "title": "SVP Compliance",
+    "status": "sent",
+    "warm_intel": "Bankruptcy restructuring CAMS certified",
+    "priority": "P1"
+  },
+  {
+    "name": "Bill Young",
+    "company": "Station Casinos",
+    "email": "bill.young@stationcasinos.com",
+    "title": "SVP Compliance & Security",
+    "status": "bounced_possible_retirement",
+    "warm_intel": "May be retired \u2014 use LinkedIn DM",
+    "priority": "P1"
+  },
+  {
+    "name": "Joy Scott",
+    "company": "Boyd Gaming",
+    "email": "joy.scott@boydgaming.com",
+    "title": "Director of Surveillance",
+    "status": "sent_wave2",
+    "priority": "P2"
+  },
+  {
+    "name": "Joe Benavidez III",
+    "company": "Station Casinos",
+    "email": "joe.benavidez@stationcasinos.com",
+    "title": "Director of Surveillance",
+    "status": "sent_wave2",
+    "priority": "P2"
+  },
+  {
+    "name": "J. Scott Drake",
+    "company": "Station Casinos",
+    "email": "scott.drake@stationcasinos.com",
+    "title": "VP & CISO",
+    "status": "sent_wave2",
+    "priority": "P2"
+  },
+  {
+    "name": "Jessie Beaudoin",
+    "company": "Golden Entertainment",
+    "email": "jessie.beaudoin@goldenent.com",
+    "title": "SVP Corporate Security",
+    "status": "sent_wave2",
+    "priority": "P1"
+  },
+  {
+    "name": "Ray Gentry",
+    "company": "Affinity Gaming",
+    "email": "rgentry@affinitygaming.com",
+    "title": "VP Corporate Security",
+    "status": "sent_wave2",
+    "priority": "P1"
+  },
+  {
+    "name": "Michael Pfeiler",
+    "company": "Ballys Corp",
+    "email": "mpfeiler@ballys.com",
+    "title": "Regional ED Security",
+    "status": "sent_wave2",
+    "priority": "P1"
+  },
+  {
+    "name": "Matthew LeRoux",
+    "company": "Ballys Corp",
+    "email": "mleroux@ballys.com",
+    "title": "Regional ED Surveillance",
+    "status": "sent_wave2",
+    "priority": "P1"
+  },
+  {
+    "name": "Tony Pierite",
+    "company": "Paragon Casino",
+    "email": "tpierite@paragoncasinoresort.com",
+    "title": "VP Security",
+    "status": "bounced",
+    "priority": "P1"
+  },
+  {
+    "name": "Don Westcott",
+    "company": "Ballys Corp",
+    "email": "dwestcott@ballys.com",
+    "title": "SVP Global CCO",
+    "status": "do_not_contact_departed_feb2025",
+    "priority": "P0"
+  }
+]
