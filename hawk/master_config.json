@@ -1,0 +1,35 @@
+{
+  "last_updated": "2026-03-24",
+  "operator": {
+    "name": "Jay Lancaster",
+    "call_me": "Love",
+    "email_workspace": "creator@cwbuni.com",
+    "telegram_chat_id": "8408576795"
+  },
+  "product": {
+    "name": "HAWK Command OS",
+    "url": "hawkcommand.com",
+    "positioning": "Compliance defense. Litigation protection. Operational command."
+  },
+  "offers": {
+    "simulation_package": {
+      "price": 7500,
+      "stripe_link": "https://buy.stripe.com/3cIdR1gLMbEY75cbp25wI0d"
+    },
+    "pilot_deployment": {
+      "price": 100000,
+      "stripe_link": "https://buy.stripe.com/eVq14f8fg7oIfBI64I5wI0e"
+    }
+  },
+  "tools": {
+    "calendly": "https://calendly.com/communitywealthbuilders/30min",
+    "gmail": "creator@cwbuni.com",
+    "telegram_bot": "8712850498:AAFRXaa3Nx168ESSWWrS6dHDxQ7PPhoWBl0",
+    "supabase_url": "https://ujvsbjqvuzzlefypjbub.supabase.co",
+    "github_repo": "jaylancaster470-gif/cwb-command-center"
+  },
+  "revenue_targets": {
+    "48_hours": 20000,
+    "21_days": 75000
+  }
+}
