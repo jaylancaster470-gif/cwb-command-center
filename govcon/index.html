@@ -256,6 +256,221 @@
     section { padding: 70px 16px; }
     .market-big { padding: 32px 20px; }
   }
+
+  /* ── SOLOMON VOICE AGENT ── */
+  #solomon-orb-container {
+    position: fixed;
+    bottom: 2.5rem; right: 2.5rem;
+    z-index: 9999;
+    display: flex; flex-direction: column; align-items: flex-end; gap: 1rem;
+  }
+  .solomon-tooltip {
+    background: rgba(10,10,15,0.97);
+    border: 1px solid rgba(201,168,76,0.35);
+    color: #E8E8F0;
+    padding: 0.55rem 1.1rem;
+    font-size: 0.78rem;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    border-radius: 4px;
+    animation: sol-fadeIn 0.6s ease-out 2.5s both;
+    pointer-events: none;
+  }
+  .solomon-tooltip strong { color: var(--gold); }
+  #solomon-orb {
+    width: 76px; height: 76px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 32%, #f0dfa0, #c9a84c 52%, #7a5c1a);
+    cursor: pointer;
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 2px;
+    box-shadow: 0 0 0 0 rgba(201,168,76,0.35), 0 8px 28px rgba(201,168,76,0.22);
+    animation: sol-pulse 3s ease-in-out infinite;
+    transition: transform 0.3s, box-shadow 0.3s;
+    user-select: none;
+  }
+  #solomon-orb:hover {
+    transform: scale(1.07);
+    box-shadow: 0 0 0 0 rgba(201,168,76,0.55), 0 12px 38px rgba(201,168,76,0.38);
+  }
+  #solomon-orb.active {
+    animation: sol-pulse-active 1s ease-in-out infinite;
+    box-shadow: 0 0 0 8px rgba(201,168,76,0.18), 0 8px 38px rgba(201,168,76,0.45);
+  }
+  #solomon-orb.listening { animation: sol-listen 0.65s ease-in-out infinite; }
+  .solomon-orb-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.54rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #0A0A0F;
+  }
+  .solomon-orb-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #0A0A0F;
+    letter-spacing: 0.04em;
+  }
+  #solomon-orb::before, #solomon-orb::after {
+    content: '';
+    position: absolute; inset: -8px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.28);
+    animation: sol-ripple 3s ease-out infinite;
+  }
+  #solomon-orb::after { animation-delay: 1.5s; }
+
+  /* ── SOLOMON MODAL ── */
+  #solomon-modal {
+    position: fixed;
+    bottom: 8.5rem; right: 2.5rem;
+    width: 340px;
+    background: #0f0f18;
+    border: 1px solid rgba(201,168,76,0.22);
+    z-index: 9998;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.85);
+    animation: sol-slideUp 0.32s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  #solomon-modal.open { display: flex; }
+  .solomon-modal-header {
+    background: linear-gradient(135deg, #1a1500, #251c00);
+    border-bottom: 1px solid rgba(201,168,76,0.18);
+    padding: 1.1rem 1.4rem;
+    display: flex; align-items: center; gap: 0.9rem;
+  }
+  .solomon-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #f0dfa0, #c9a84c 60%);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem; color: #0A0A0F; font-weight: 900;
+    flex-shrink: 0;
+  }
+  .solomon-modal-title { flex: 1; }
+  .solomon-modal-title h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem; font-weight: 800; color: #E8E8F0; margin: 0;
+  }
+  .solomon-modal-title p { font-size: 0.68rem; color: var(--gold); margin: 0.1rem 0 0; letter-spacing: 0.08em; }
+  .solomon-modal-close {
+    background: none; border: none; color: #888899;
+    font-size: 1.1rem; cursor: pointer; padding: 0.2rem;
+    transition: color 0.2s; line-height: 1;
+  }
+  .solomon-modal-close:hover { color: var(--gold); }
+
+  .solomon-transcript {
+    flex: 1; overflow-y: auto;
+    padding: 1.1rem;
+    display: flex; flex-direction: column; gap: 0.75rem;
+    min-height: 180px; max-height: 260px;
+  }
+  .solomon-transcript::-webkit-scrollbar { width: 3px; }
+  .solomon-transcript::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.3); }
+  .solomon-bubble {
+    max-width: 87%;
+    padding: 0.65rem 0.95rem;
+    font-size: 0.84rem;
+    font-family: 'Inter', sans-serif;
+    line-height: 1.55;
+    border-radius: 4px;
+    animation: sol-fadeIn 0.28s ease-out;
+  }
+  .solomon-bubble.solomon { background: rgba(201,168,76,0.1); border-left: 2px solid var(--gold); color: #E8E8F0; align-self: flex-start; }
+  .solomon-bubble.user { background: rgba(255,255,255,0.05); color: #888899; align-self: flex-end; text-align: right; font-style: italic; }
+
+  .solomon-status-bar {
+    padding: 0.75rem 1.4rem;
+    border-top: 1px solid rgba(201,168,76,0.1);
+    display: flex; align-items: center; gap: 0.7rem;
+  }
+  .solomon-status-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--gold);
+    animation: sol-blink 1.5s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  .solomon-status-dot.idle { background: #444455; animation: none; }
+  .solomon-status-dot.speaking { background: #4ade80; }
+  #solomon-status-text { font-size: 0.73rem; font-family: 'Inter', sans-serif; color: #888899; flex: 1; }
+
+  .solomon-controls {
+    padding: 0.85rem 1.4rem 1.1rem;
+    display: flex; gap: 0.65rem; justify-content: center;
+  }
+  .solomon-btn {
+    flex: 1; padding: 0.65rem 0.9rem;
+    background: transparent;
+    border: 1px solid rgba(201,168,76,0.25);
+    color: var(--gold);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.67rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  .solomon-btn:hover { background: rgba(201,168,76,0.1); border-color: var(--gold); }
+  .solomon-btn.primary { background: var(--gold); color: #0A0A0F; border-color: var(--gold); font-weight: 800; }
+  .solomon-btn.primary:hover { background: var(--gold-light); }
+  .solomon-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+
+  /* ── SOLOMON ALERT ── */
+  #solomon-alert {
+    position: fixed; top: 1rem; left: 50%; transform: translateX(-50%);
+    background: rgba(10,10,15,0.97);
+    border: 1px solid rgba(201,168,76,0.4);
+    color: #E8E8F0;
+    padding: 0.75rem 1.7rem;
+    font-size: 0.81rem;
+    font-family: 'Inter', sans-serif;
+    border-radius: 6px;
+    z-index: 99999;
+    display: none; align-items: center; gap: 0.75rem;
+    max-width: 90vw; box-shadow: 0 4px 20px rgba(0,0,0,0.7);
+  }
+  #solomon-alert.show { display: flex; }
+
+  /* ── SOLOMON KEYFRAMES ── */
+  @keyframes sol-fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes sol-slideUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes sol-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.35), 0 8px 28px rgba(201,168,76,0.18); }
+    50% { box-shadow: 0 0 0 12px rgba(201,168,76,0), 0 8px 28px rgba(201,168,76,0.28); }
+  }
+  @keyframes sol-pulse-active {
+    0%, 100% { box-shadow: 0 0 0 5px rgba(201,168,76,0.22), 0 8px 38px rgba(201,168,76,0.38); }
+    50% { box-shadow: 0 0 0 13px rgba(201,168,76,0.08), 0 8px 38px rgba(201,168,76,0.48); }
+  }
+  @keyframes sol-listen {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+  }
+  @keyframes sol-ripple {
+    0% { opacity: 0.55; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1.52); }
+  }
+  @keyframes sol-blink {
+    0%, 100% { opacity: 1; } 50% { opacity: 0.25; }
+  }
+
+  @media(max-width: 600px) {
+    #solomon-modal { width: calc(100vw - 3rem); right: 1.5rem; bottom: 7.5rem; }
+    #solomon-orb-container { bottom: 1.5rem; right: 1.5rem; }
+  }
 </style>
 </head>
 <body>
@@ -602,6 +817,269 @@
   <p>© 2026 From Day One — Community Wealth Builders, LLC · All rights reserved</p>
   <p style="margin-top:8px">Not legal, financial, or accounting advice. Results depend on individual effort and circumstances.</p>
 </footer>
+
+<!-- ── SOLOMON ALERT ── -->
+<div id="solomon-alert">
+  <span>⚠️</span>
+  <span id="solomon-alert-text"></span>
+</div>
+
+<!-- ── SOLOMON ORB ── -->
+<div id="solomon-orb-container">
+  <div class="solomon-tooltip"><strong>Solomon</strong> — Ask me anything ✦</div>
+  <div id="solomon-orb" onclick="toggleSolomon()" title="Talk to Solomon">
+    <div class="solomon-orb-name">Solomon</div>
+    <div class="solomon-orb-label">Ask me</div>
+  </div>
+</div>
+
+<!-- ── SOLOMON MODAL ── -->
+<div id="solomon-modal">
+  <div class="solomon-modal-header">
+    <div class="solomon-avatar">S</div>
+    <div class="solomon-modal-title">
+      <h3>Solomon</h3>
+      <p>✦ From Day One · Business Guide</p>
+    </div>
+    <button class="solomon-modal-close" onclick="closeSolomon()">✕</button>
+  </div>
+
+  <div class="solomon-transcript" id="solomon-transcript"></div>
+
+  <div class="solomon-status-bar">
+    <div class="solomon-status-dot idle" id="solomon-dot"></div>
+    <span id="solomon-status-text">Click "Speak" to begin</span>
+  </div>
+
+  <div class="solomon-controls">
+    <button class="solomon-btn primary" id="solomon-speak-btn" onclick="solomonStartListening()">🎙 Speak</button>
+    <button class="solomon-btn" id="solomon-stop-btn" onclick="solomonStopAll()" disabled>⏹ Stop</button>
+  </div>
+</div>
+
+<script>
+  // ── SOLOMON AI VOICE AGENT ──
+  const SOLOMON_API_KEY = "AIzaSyC_ECkMFz2JmYwjp1bgIv0mqXJExT0gAu8";
+  const SOLOMON_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${SOLOMON_API_KEY}`;
+
+  const SOLOMON_SYSTEM_PROMPT = `You are Solomon, the AI guide for "From Day One" — a membership program by Jay Lancaster and Community Wealth Builders that teaches people how to build a bank-ready business from scratch and access America's $700 billion government contracting market.
+
+Your role: help visitors understand what's possible, answer questions honestly, and guide ready people toward joining at $97/month.
+
+What you know:
+- The course has 7 modules covering LLC formation, EIN, business credit (separate from personal credit), domain/email/phone setup, registered agent, and SAM.gov registration
+- Membership includes video modules, e-book, audiobook, PDF checklists, private Telegram community, and SAM.gov walkthrough
+- Price: $97/month, cancel anytime
+- This was built for people with no business background, damaged personal credit, or who've been shut out of the system
+- Jay Lancaster grew up in Brooklyn, built this from lived experience
+- The U.S. Government spends $700B+ per year; 23% is mandated to small businesses = $161B+ for people like your visitors
+- SAM.gov registration is free and required to receive any federal contract
+
+Personality: Wise, direct, and warm — like a mentor who's been where they are and found the path. No hype, no jargon. Plain talk. You listen and meet them where they are. When someone is ready, guide them clearly to join.
+
+Keep every response to 2-3 sentences max — this is voice delivery. Never say you're an AI in a way that breaks trust; you're Solomon, their guide.`;
+
+  let solomonRecognition = null;
+  let solomonSynth = window.speechSynthesis;
+  let solomonHistory = [];
+  let solomonListening = false;
+  let solomonSpeaking = false;
+  let solomonOpen = false;
+
+  function openSolomon() {
+    document.getElementById('solomon-modal').classList.add('open');
+    document.getElementById('solomon-orb').classList.add('active');
+    solomonOpen = true;
+    if (solomonHistory.length === 0) {
+      setTimeout(() => solomonGreet(), 420);
+    }
+  }
+  function closeSolomon() {
+    document.getElementById('solomon-modal').classList.remove('open');
+    document.getElementById('solomon-orb').classList.remove('active');
+    solomonStopAll();
+    solomonOpen = false;
+  }
+  function toggleSolomon() { solomonOpen ? closeSolomon() : openSolomon(); }
+
+  async function solomonGreet() {
+    const msg = "I'm Solomon — I'm here to help you understand exactly how to build a bank-ready business and access government contracts. What's your biggest question right now?";
+    solomonAddBubble(msg, 'solomon');
+    await solomonSpeak(msg);
+  }
+
+  function solomonAddBubble(text, who) {
+    const t = document.getElementById('solomon-transcript');
+    const b = document.createElement('div');
+    b.className = `solomon-bubble ${who}`;
+    b.textContent = text;
+    t.appendChild(b);
+    t.scrollTop = t.scrollHeight;
+    const role = who === 'solomon' ? 'model' : 'user';
+    solomonHistory.push({ role, parts: [{ text }] });
+  }
+
+  function solomonSetStatus(text, type) {
+    document.getElementById('solomon-status-text').textContent = text;
+    const dot = document.getElementById('solomon-dot');
+    dot.className = 'solomon-status-dot ' + (type || 'idle');
+  }
+
+  function solomonShowAlert(msg) {
+    const a = document.getElementById('solomon-alert');
+    document.getElementById('solomon-alert-text').textContent = msg;
+    a.classList.add('show');
+    setTimeout(() => a.classList.remove('show'), 5000);
+  }
+
+  function solomonSpeak(text) {
+    return new Promise((resolve) => {
+      if (!solomonSynth) { resolve(); return; }
+      solomonSynth.cancel();
+      const utt = new SpeechSynthesisUtterance(text);
+      utt.rate = 0.9;
+      utt.pitch = 0.95;
+      utt.volume = 1.0;
+
+      const voices = solomonSynth.getVoices();
+      const preferred = voices.find(v =>
+        v.name.includes('Daniel') ||
+        v.name.includes('Alex') ||
+        v.name.includes('Fred') ||
+        v.name.toLowerCase().includes('male') ||
+        v.name.includes('Google UK English Male') ||
+        v.name.includes('Arthur')
+      ) || voices.find(v => v.lang === 'en-US') || voices[0];
+      if (preferred) utt.voice = preferred;
+
+      solomonSpeaking = true;
+      solomonSetStatus('Solomon is speaking…', 'speaking');
+      document.getElementById('solomon-orb').classList.add('active');
+      document.getElementById('solomon-stop-btn').disabled = false;
+
+      utt.onend = () => {
+        solomonSpeaking = false;
+        solomonSetStatus('Click "Speak" to continue', 'idle');
+        document.getElementById('solomon-orb').classList.remove('listening');
+        resolve();
+      };
+      utt.onerror = () => { solomonSpeaking = false; resolve(); };
+      solomonSynth.speak(utt);
+    });
+  }
+
+  async function solomonAskGemini(userMessage) {
+    try {
+      const messages = solomonHistory.slice(-12);
+      const body = {
+        system_instruction: { parts: [{ text: SOLOMON_SYSTEM_PROMPT }] },
+        contents: messages
+      };
+      const resp = await fetch(SOLOMON_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({}));
+        throw new Error(err?.error?.message || `HTTP ${resp.status}`);
+      }
+      const data = await resp.json();
+      const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!reply) throw new Error('Empty response');
+      return reply;
+    } catch (err) {
+      console.error('Solomon error:', err);
+      return "I'm having a brief moment — give me one more try, or you can reach Jay's team directly through the site.";
+    }
+  }
+
+  function solomonStartListening() {
+    if (solomonSpeaking) { solomonSynth.cancel(); solomonSpeaking = false; }
+
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRec) {
+      solomonShowAlert('Voice input requires Chrome or Edge. Try a supported browser.');
+      solomonSetStatus('Browser not supported — use Chrome', 'idle');
+      return;
+    }
+
+    if (solomonListening && solomonRecognition) { solomonRecognition.stop(); return; }
+
+    solomonRecognition = new SpeechRec();
+    solomonRecognition.lang = 'en-US';
+    solomonRecognition.interimResults = false;
+    solomonRecognition.maxAlternatives = 1;
+    solomonRecognition.continuous = false;
+
+    solomonListening = true;
+    solomonSetStatus('Listening… speak now', 'listening');
+    document.getElementById('solomon-orb').classList.add('listening');
+    document.getElementById('solomon-speak-btn').textContent = '🔴 Listening…';
+    document.getElementById('solomon-speak-btn').disabled = true;
+    document.getElementById('solomon-stop-btn').disabled = false;
+
+    solomonRecognition.onresult = async (event) => {
+      const transcript = event.results[0][0].transcript;
+      solomonListening = false;
+      document.getElementById('solomon-speak-btn').textContent = '🎙 Speak';
+      document.getElementById('solomon-speak-btn').disabled = false;
+      document.getElementById('solomon-orb').classList.remove('listening');
+
+      if (!transcript.trim()) { solomonSetStatus("Didn't catch that — try again", 'idle'); return; }
+
+      solomonAddBubble(transcript, 'user');
+      solomonSetStatus('Solomon is thinking…', 'thinking');
+
+      const reply = await solomonAskGemini(transcript);
+      solomonAddBubble(reply, 'solomon');
+      await solomonSpeak(reply);
+    };
+
+    solomonRecognition.onerror = (event) => {
+      solomonListening = false;
+      document.getElementById('solomon-speak-btn').textContent = '🎙 Speak';
+      document.getElementById('solomon-speak-btn').disabled = false;
+      document.getElementById('solomon-orb').classList.remove('listening');
+
+      if (event.error === 'not-allowed') {
+        solomonSetStatus('Microphone access denied', 'idle');
+        solomonShowAlert('Please allow microphone access to talk with Solomon.');
+      } else if (event.error === 'no-speech') {
+        solomonSetStatus('No speech detected — try again', 'idle');
+      } else {
+        solomonSetStatus('Voice error — please retry', 'idle');
+      }
+    };
+
+    solomonRecognition.onend = () => {
+      solomonListening = false;
+      if (document.getElementById('solomon-speak-btn').textContent.includes('Listening')) {
+        document.getElementById('solomon-speak-btn').textContent = '🎙 Speak';
+        document.getElementById('solomon-speak-btn').disabled = false;
+      }
+    };
+
+    solomonRecognition.start();
+  }
+
+  function solomonStopAll() {
+    if (solomonRecognition) { try { solomonRecognition.abort(); } catch(e) {} }
+    if (solomonSynth) solomonSynth.cancel();
+    solomonListening = false;
+    solomonSpeaking = false;
+    solomonSetStatus('Stopped — click Speak to continue', 'idle');
+    document.getElementById('solomon-speak-btn').textContent = '🎙 Speak';
+    document.getElementById('solomon-speak-btn').disabled = false;
+    document.getElementById('solomon-stop-btn').disabled = true;
+    document.getElementById('solomon-orb').classList.remove('listening');
+  }
+
+  if (solomonSynth) {
+    solomonSynth.onvoiceschanged = () => solomonSynth.getVoices();
+    solomonSynth.getVoices();
+  }
+</script>
 
 </body>
 </html>
